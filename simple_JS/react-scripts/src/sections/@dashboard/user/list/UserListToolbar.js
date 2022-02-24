@@ -9,10 +9,10 @@ import InputStyle from '../../../../components/InputStyle';
 // ----------------------------------------------------------------------
 
 const RootStyle = styled(Toolbar)(({ theme }) => ({
-  height: 60,
+  height: 96,
   display: 'flex',
   justifyContent: 'space-between',
-  padding: theme.spacing(5, 0, 5, 0),
+  padding: theme.spacing(0, 1, 0, 3),
 }));
 
 // ----------------------------------------------------------------------
@@ -43,10 +43,10 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
         </Typography>
       ) : (
         <InputStyle
-          stretchStart={280}
+          stretchStart={240}
           value={filterName}
           onChange={(event) => onFilterName(event.target.value)}
-          placeholder="Nhập từ khóa tìm kiếm..."
+          placeholder="Search user..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">
