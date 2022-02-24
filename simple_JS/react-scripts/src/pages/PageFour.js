@@ -10,10 +10,10 @@ export default function PageFour() {
   const { themeStretch } = useSettings();
 
   return (
-    <Page title="Page Four">
+    <Page title="Page Four123">
       <Container maxWidth={themeStretch ? false : 'xl'}>
         <Typography variant="h3" component="h1" paragraph>
-          Page Four
+          Page Four 123
         </Typography>
         <Typography gutterBottom>
           Curabitur turpis. Vestibulum facilisis, purus nec pulvinar iaculis, ligula mi congue nunc, vitae euismod

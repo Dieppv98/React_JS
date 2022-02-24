@@ -81,14 +81,15 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
           )}
         </Stack>
 
-        <NavbarAccount isCollapse={isCollapse} />
+        {/* <NavbarAccount isCollapse={isCollapse} /> */}
       </Stack>
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
 
       <Box sx={{ flexGrow: 1 }} />
 
-      {!isCollapse && <NavbarDocs />}
+      {!isCollapse}
+      {/* {!isCollapse && <NavbarDocs />} */}
     </Scrollbar>
   );
 

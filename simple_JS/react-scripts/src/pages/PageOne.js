@@ -20,6 +20,7 @@ import {
   TablePagination,
 } from '@mui/material';
 
+import ProductMoreMenu from '../sections/@dashboard/user/list/ProductMoreMenu';
 import { PATH_DASHBOARD } from '../routes/paths';
 // hooks
 import useSettings from '../hooks/useSettings';
@@ -77,7 +78,7 @@ export default function UserList() {
       .then((response) => response.json())
       .then((data) => setUserList(data.data))
       .catch((err) => console.log(err));
-  });
+  }, []);
   console.log(userList);
 
   const [page, setPage] = useState(0);
@@ -198,10 +199,10 @@ export default function UserList() {
                                     <TableCell align="center">{ten_size}</TableCell>
                                     <TableCell align="center">{ten_mau_sac}</TableCell>
                                     <TableCell align="center" style={{ color: 'rgb(0 206 178)' }}>
-                                      {quantity}
+                                      {quantity == null ? 'Không có' : quantity}
                                     </TableCell>
                                     <TableCell align="center" style={{ color: 'rgb(0 224 51)' }}>
-                                      {quantity_current}
+                                      {quantity_current == null ? 'Không có' : quantity_current}
                                     </TableCell>
                                     <TableCell align="center" style={{ color: '#ff0b0b' }}>
                                       {money_str === '0' ? '' : money_str}
@@ -220,7 +221,8 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="center">
-                          <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} />
+                          {/* <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} /> */}
+                          <ProductMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} />
                         </TableCell>
                       </TableRow>
                     );
