@@ -1,28 +1,37 @@
 import { paramCase, capitalCase } from 'change-case';
 import { useParams, useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
 // @mui
 import { Container } from '@mui/material';
 // routes
 import { PATH_DASHBOARD, PATH_PRODUCT } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
-// _mock_
-import { _userList } from '../../_mock';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import UserNewForm from '../../sections/@dashboard/user/UserNewForm';
+import ProductNewForm from '../../sections/@dashboard/product/ProductNewForm';
 
 // ----------------------------------------------------------------------
+const link = process.env.REACT_APP_API_HOST;
 
 export default function UserCreate() {
   const { themeStretch } = useSettings();
   const { pathname } = useLocation();
-  const { name = '' } = useParams();
+  const { productId = 0 } = useParams();
   const isEdit = pathname.includes('edit');
 
-  const currentUser = _userList.find((user) => paramCase(user.name) === name);
+  const [currentProduct, setCurrentProduct] = useState();
+
+  console.log(`userId    ${productId}`);
+  useEffect(() => {
+    fetch(`${link}/product/getbyid/${productId}`)
+      .then((response) => response.json())
+      .then((data) => setCurrentProduct(data))
+      .catch((err) => console.log(err));
+  }, []);
+
   return (
     <Page title={!isEdit ? 'Thêm mới sản phẩm' : 'Chỉnh sửa sản phẩm'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
@@ -31,11 +40,10 @@ export default function UserCreate() {
           links={[
             { name: 'Tổng quan', href: PATH_DASHBOARD.root },
             { name: 'Sản phẩm', href: PATH_PRODUCT.product.list },
-            { name: !isEdit ? 'Thêm mới' : capitalCase(name) },
+            { name: !isEdit ? 'Thêm mới' : 'Chỉnh sửa' },
           ]}
         />
-
-        <UserNewForm isEdit={isEdit} currentUser={currentUser} />
+        <ProductNewForm isEdit={isEdit} currentProduct={currentProduct} />
       </Container>
     </Page>
   );

@@ -87,7 +87,8 @@ export const PATH_PRODUCT = {
   product: {
     root: path(ROOTS_PRODUCT, ''),
     list: path(ROOTS_PRODUCT, '/list'),
-    update: path(ROOTS_PRODUCT, '/update'),
+    new: path(ROOTS_PRODUCT, '/new'),
+    edit: path(ROOTS_PRODUCT, '/edit'),
   },
 };
 

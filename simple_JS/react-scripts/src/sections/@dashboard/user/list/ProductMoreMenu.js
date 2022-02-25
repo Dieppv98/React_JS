@@ -5,7 +5,7 @@ import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { MenuItem, IconButton } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_DASHBOARD, PATH_PRODUCT } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import MenuPopover from '../../../../components/MenuPopover';
@@ -13,11 +13,11 @@ import MenuPopover from '../../../../components/MenuPopover';
 // ----------------------------------------------------------------------
 
 ProductMoreMenu.propTypes = {
-  onDelete: PropTypes.func,
-  userName: PropTypes.string,
+  onPlus: PropTypes.func,
+  productId: PropTypes.number,
 };
 
-export default function ProductMoreMenu({ onDelete, userName }) {
+export default function ProductMoreMenu({ onPlus, productId }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -49,18 +49,18 @@ export default function ProductMoreMenu({ onDelete, userName }) {
         arrow="right-top"
         sx={{
           mt: -1,
-          width: 160,
+          width: 170,
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
-        <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
-          <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
+        <MenuItem onClick={onPlus} sx={{ color: 'chartreuse' }}>
+          <Iconify icon={'eva:plus-square-outline'} sx={{ ...ICON }} />
+          Thêm phân loại
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.user.root}/${paramCase(userName)}/edit`}>
+        <MenuItem component={RouterLink} to={`${PATH_PRODUCT.product.root}/edit/${productId}`}>
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          Edit 123
+          Sửa sản phẩm
         </MenuItem>
       </MenuPopover>
     </>

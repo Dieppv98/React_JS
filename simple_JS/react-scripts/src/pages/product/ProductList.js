@@ -132,7 +132,7 @@ export default function UserList() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_PRODUCT.product.update}
+              to={PATH_PRODUCT.product.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               Thêm mới
@@ -222,7 +222,7 @@ export default function UserList() {
 
                         <TableCell align="center">
                           {/* <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} /> */}
-                          <ProductMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} />
+                          <ProductMoreMenu onPlus={() => handleDeleteUser(id)} productId={id} />
                         </TableCell>
                       </TableRow>
                     );

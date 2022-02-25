@@ -35,7 +35,8 @@ export default function Router() {
           children: [
             // { element: <Navigate to="/dashboard/user/four" replace />, index: true },
             { path: '/product/list', element: <ProductList /> },
-            { path: '/product/update', element: <ProductCreate /> },
+            { path: '/product/new', element: <ProductCreate /> },
+            { path: 'product/edit/:productId', element: <ProductCreate /> },
 
             { path: '/dashboard/user/six', element: <PageSix /> },
           ],
