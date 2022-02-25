@@ -31,11 +31,12 @@ export default function Router() {
         { path: '/dashboard/two', element: <PageTwo /> },
         { path: '/dashboard/three', element: <PageThree /> },
         {
-          path: '/dashboard/user',
+          path: '',
           children: [
-            { element: <Navigate to="/dashboard/user/four" replace />, index: true },
-            { path: '/dashboard/user/four', element: <PageFour1 /> },
-            { path: '/dashboard/user/five', element: <PageFive /> },
+            // { element: <Navigate to="/dashboard/user/four" replace />, index: true },
+            { path: '/product/list', element: <ProductList /> },
+            { path: '/product/update', element: <ProductCreate /> },
+
             { path: '/dashboard/user/six', element: <PageSix /> },
           ],
         },
@@ -57,7 +58,9 @@ export default function Router() {
 const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
 const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
 const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
-const PageFour1 = Loadable(lazy(() => import('../pages/PageFour')));
+const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
 const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
 const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
+const ProductList = Loadable(lazy(() => import('../pages/product/ProductList')));
+const ProductCreate = Loadable(lazy(() => import('../pages/product/ProductCreate')));

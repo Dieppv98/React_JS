@@ -20,21 +20,21 @@ import {
   TablePagination,
 } from '@mui/material';
 
-import ProductMoreMenu from '../sections/@dashboard/user/list/ProductMoreMenu';
-import { PATH_DASHBOARD } from '../routes/paths';
+import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
+import { PATH_DASHBOARD, PATH_PRODUCT } from '../../routes/paths';
 // hooks
-import useSettings from '../hooks/useSettings';
+import useSettings from '../../hooks/useSettings';
 // _mock_
 // import { _userList } from '../_mock';
 // components
-import Page from '../components/Page';
-import Label from '../components/Label';
-import Iconify from '../components/Iconify';
-import Scrollbar from '../components/Scrollbar';
-import SearchNotFound from '../components/SearchNotFound';
-import HeaderBreadcrumbs from '../components/HeaderBreadcrumbs';
+import Page from '../../components/Page';
+import Label from '../../components/Label';
+import Iconify from '../../components/Iconify';
+import Scrollbar from '../../components/Scrollbar';
+import SearchNotFound from '../../components/SearchNotFound';
+import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../sections/@dashboard/user/list';
+import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
 
@@ -123,7 +123,7 @@ export default function UserList() {
   const isNotFound = !filteredUsers.length && Boolean(filterName);
 
   return (
-    <Page title="User: List">
+    <Page title="Danh mục sản phẩm">
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
           heading="Danh sách sản phẩm"
@@ -132,7 +132,7 @@ export default function UserList() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_DASHBOARD.user.newUser}
+              to={PATH_PRODUCT.product.update}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               Thêm mới
@@ -168,8 +168,8 @@ export default function UserList() {
                     return (
                       <TableRow hover key={id} tabIndex={-1} sx={{ borderBottom: 0.1 }}>
                         <TableCell align="center">{index + 1}</TableCell>
-                        <TableCell align="center">{ma_san_pham}</TableCell>
                         <TableCell align="center">{ten_san_pham}</TableCell>
+                        <TableCell align="center">{ma_san_pham}</TableCell>
                         <TableCell align="center" style={{ color: 'rgb(0 206 178)' }}>
                           {total_quantity}
                         </TableCell>

@@ -20,6 +20,8 @@ const ICONS = {
   booking: getIcon('ic_booking'),
   billing: getIcon('ic_billing'),
   static: getIcon('ic_static'),
+  settings: getIcon('ic_settings'),
+  logout: getIcon('ic_logout'),
 };
 
 const sidebarConfig = [
@@ -44,10 +46,12 @@ const sidebarConfig = [
         path: '',
         icon: ICONS.dashboard,
         children: [
-          { title: 'Người dùng', path: '/dashboard/user/four' },
-          { title: 'Sản phẩm', path: '/dashboard/user/five' },
-          { title: 'Size', path: '/dashboard/user/six' },
-          { title: 'Màu sắc', path: '/dashboard/user/six' },
+          { title: 'Sản phẩm', path: 'product/list' },
+          { title: 'Size', path: '' },
+          { title: 'Màu sắc', path: '' },
+          { title: 'Người dùng', path: '' },
+          { title: 'Thông tin cá nhân', path: '' },
+          { title: 'Đổi mật khẩu', path: '' },
         ],
       },
       {
@@ -67,6 +71,20 @@ const sidebarConfig = [
           { title: 'Thống kê chi phí', path: '' },
           { title: 'Thống kê doanh thu', path: '' },
         ],
+      },
+      {
+        title: 'Quản trị hệ thống',
+        path: '',
+        icon: ICONS.settings,
+        children: [
+          { title: 'Cài đặt quyền truy cập', path: '' },
+          { title: 'Cài đặt vai trò', path: '' },
+        ],
+      },
+      {
+        title: 'Đăng xuất',
+        path: '',
+        icon: ICONS.logout,
       },
     ],
   },
