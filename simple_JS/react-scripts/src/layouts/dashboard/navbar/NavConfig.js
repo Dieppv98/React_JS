@@ -81,11 +81,12 @@ const sidebarConfig = [
           { title: 'Cài đặt vai trò', path: '' },
         ],
       },
-      {
-        title: 'Đăng xuất',
-        path: '',
-        icon: ICONS.logout,
-      },
+      // {
+      //   title: 'Đăng xuất',
+      //   path: '',
+      //   icon: ICONS.logout,
+      //   onClick: 'handleLogout',
+      // },
     ],
   },
 ];

@@ -30,7 +30,7 @@ export default function UserCreate() {
       .then((response) => response.json())
       .then((data) => setCurrentProduct(data))
       .catch((err) => console.log(err));
-  }, []);
+  }, [productId]);
 
   return (
     <Page title={!isEdit ? 'Thêm mới sản phẩm' : 'Chỉnh sửa sản phẩm'}>

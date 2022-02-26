@@ -22,6 +22,10 @@ const Loadable = (Component) => (props) => {
 export default function Router() {
   return useRoutes([
     {
+      path: 'auth/login',
+      element: <Login />,
+    },
+    {
       path: '/',
       element: <DashboardLayout />,
       children: [
@@ -55,6 +59,8 @@ export default function Router() {
   ]);
 }
 
+// Authentication
+const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 // Dashboard
 const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
 const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));

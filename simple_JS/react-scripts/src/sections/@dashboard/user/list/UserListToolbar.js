@@ -46,7 +46,7 @@ export default function UserListToolbar({ numSelected, filterName, onFilterName,
           stretchStart={240}
           value={filterName}
           onChange={(event) => onFilterName(event.target.value)}
-          placeholder="Search user..."
+          placeholder="Nhập từ khóa cần tìm..."
           InputProps={{
             startAdornment: (
               <InputAdornment position="start">

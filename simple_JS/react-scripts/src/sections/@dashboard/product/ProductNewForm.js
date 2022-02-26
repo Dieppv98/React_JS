@@ -1,19 +1,18 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useReducer } from 'react';
+// import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
-
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack, Button } from '@mui/material';
-import Iconify from '../../../components/Iconify';
+import { Box, Card, Grid, Stack } from '@mui/material';
 // routes
 import { PATH_PRODUCT } from '../../../routes/paths';
 // components
-import { FormProvider, RHFSelect, RHFSwitch, RHFTextField, RHFUploadAvatar } from '../../../components/hook-form';
+import { FormProvider, RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
 
@@ -25,7 +24,7 @@ ProductNewForm.propTypes = {
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const navigate = useNavigate();
 
-  // const { enqueueSnackbar } = useSnackbar();
+  // const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
 
   const NewProductSchema = Yup.object().shape({
     ten_san_pham: Yup.string().required('Tên sản phẩm không được bỏ trống'),
@@ -50,14 +49,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
 
   const {
     reset,
-    watch,
-    control,
-    setValue,
     handleSubmit,
     formState: { isSubmitting },
   } = methods;
-
-  const values = watch();
 
   useEffect(() => {
     if (isEdit && currentProduct) {
@@ -69,14 +63,38 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentProduct]);
 
+  const [formInput, setFormInput] = useReducer((state, newState) => ({ ...state, ...newState }), {
+    ten_san_pham: '',
+    ma_san_pham: '',
+    unit_name: '',
+  });
+
   const onSubmit = async () => {
+    const data = { formInput };
+    console.error(`du lieu: ${data}`);
     try {
-      await new Promise((resolve) => setTimeout(resolve, 500));
+      // await fetch('http://171.244.141.179:7775/Scripts/Supervision/5_Global.js', {
+      //   method: 'POST',
+      //   body: JSON.stringify(data),
+      //   headers: {
+      //     'Content-Type': 'application/json',
+      //   },
+      // })
+      //   .then((response) => console.log('Success:', JSON.stringify(response)))
+      //   .catch((error) => console.error('Error:', error));
+
       reset();
+      // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
       navigate(PATH_PRODUCT.product.list);
     } catch (error) {
       console.error(error);
     }
+  };
+
+  const handleInput = (evt) => {
+    const { name } = evt.target;
+    const newValue = evt.target.value;
+    setFormInput({ [name]: newValue });
   };
 
   return (
@@ -92,18 +110,18 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
               }}
             >
-              <RHFTextField name="ten_san_pham" label="Mã sản phẩm" />
-              <RHFTextField name="ma_san_pham" label="Tên sản phẩm" />
-              <RHFTextField name="unit_name" label="Đơn vị tính" />
+              <RHFTextField name="ten_san_pham" label="Mã sản phẩm" onChange={handleInput} />
+              <RHFTextField name="ma_san_pham" label="Tên sản phẩm" onChange={handleInput} />
+              <RHFTextField name="unit_name" label="Đơn vị tính" onChange={handleInput} />
             </Box>
 
             <Stack alignItems="flex-end" textAlign="right" display="block" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Thêm mới' : 'Lưu thay đổi'}
               </LoadingButton>
-              <Button variant="contained" href={PATH_PRODUCT.product.list} color={'error'}>
+              {/* <Button variant="contained" href={PATH_PRODUCT.product.list} color={'error'}>
                 Quay lại
-              </Button>
+              </Button> */}
             </Stack>
           </Card>
         </Grid>

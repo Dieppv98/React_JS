@@ -1,40 +1,32 @@
-import { sentenceCase } from 'change-case';
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
-import { useTheme } from '@mui/material/styles';
 // @mui
 import {
-  Paper,
   Table,
   TableBody,
   TableCell,
   TableContainer,
-  TableHead,
   TableRow,
   Card,
-  Avatar,
   Button,
-  Checkbox,
   Container,
-  Typography,
   TablePagination,
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
-import { PATH_DASHBOARD, PATH_PRODUCT } from '../../routes/paths';
+import { PATH_PRODUCT } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // _mock_
 // import { _userList } from '../_mock';
 // components
 import Page from '../../components/Page';
-import Label from '../../components/Label';
 import Iconify from '../../components/Iconify';
 import Scrollbar from '../../components/Scrollbar';
 import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import { UserListHead, UserListToolbar, UserMoreMenu } from '../../sections/@dashboard/user/list';
+import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user/list';
 
 // ----------------------------------------------------------------------
 
@@ -63,7 +55,6 @@ const TABLE_HEAD_DETAIL = [
 const link = process.env.REACT_APP_API_HOST;
 
 export default function UserList() {
-  const theme = useTheme();
   const { themeStretch } = useSettings();
 
   const [userList, setUserList] = useState([]);
@@ -87,12 +78,6 @@ export default function UserList() {
   const [orderBy, setOrderBy] = useState('ten_san_pham');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
-  const handleRequestSort = (property) => {
-    const isAsc = orderBy === property && order === 'asc';
-    setOrder(isAsc ? 'desc' : 'asc');
-    setOrderBy(property);
-  };
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));

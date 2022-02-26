@@ -26,19 +26,12 @@ export default function LoginForm() {
   const [showPassword, setShowPassword] = useState(false);
 
   const LoginSchema = Yup.object().shape({
-    email: Yup.string().email('Email must be a valid email address').required('Email is required'),
-    password: Yup.string().required('Password is required'),
+    username: Yup.string().required('Tài khoản không được bỏ trống!'),
+    password: Yup.string().required('Mật khẩu không được bỏ trống!'),
   });
-
-  const defaultValues = {
-    email: 'demo@minimals.cc',
-    password: 'demo1234',
-    remember: true,
-  };
 
   const methods = useForm({
     resolver: yupResolver(LoginSchema),
-    defaultValues,
   });
 
   const {
@@ -50,7 +43,7 @@ export default function LoginForm() {
 
   const onSubmit = async (data) => {
     try {
-      await login(data.email, data.password);
+      await login(data.username, data.password);
     } catch (error) {
       console.error(error);
       reset();
@@ -65,12 +58,12 @@ export default function LoginForm() {
       <Stack spacing={3}>
         {!!errors.afterSubmit && <Alert severity="error">{errors.afterSubmit.message}</Alert>}
 
-        <RHFTextField name="email" label="Email address" />
+        <RHFTextField name="username" label="Tài khoản" />
 
         <RHFTextField
           name="password"
-          label="Password"
-          type={showPassword ? 'text' : 'password'}
+          label="Mật khẩu"
+          type={showPassword ? 'text' : 'Mật khẩu'}
           InputProps={{
             endAdornment: (
               <InputAdornment position="end">
@@ -83,15 +76,15 @@ export default function LoginForm() {
         />
       </Stack>
 
-      <Stack direction="row" alignItems="center" justifyContent="space-between" sx={{ my: 2 }}>
-        <RHFCheckbox name="remember" label="Remember me" />
-        <Link component={RouterLink} variant="subtitle2" to={PATH_AUTH.resetPassword}>
-          Forgot password?
-        </Link>
-      </Stack>
-
-      <LoadingButton fullWidth size="large" type="submit" variant="contained" loading={isSubmitting}>
-        Login
+      <LoadingButton
+        style={{ marginTop: '25px' }}
+        fullWidth
+        size="large"
+        type="submit"
+        variant="contained"
+        loading={isSubmitting}
+      >
+        Đăng nhập
       </LoadingButton>
     </FormProvider>
   );

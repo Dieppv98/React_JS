@@ -1,9 +1,10 @@
+import { useSnackbar } from 'notistack';
 import PropTypes from 'prop-types';
-import { useEffect } from 'react';
-import { useLocation } from 'react-router-dom';
+import { useEffect, useState } from 'react';
+import { useLocation, Link as RouterLink, useNavigate } from 'react-router-dom';
 // @mui
 import { styled, useTheme } from '@mui/material/styles';
-import { Box, Stack, Drawer } from '@mui/material';
+import { Box, Stack, Drawer, MenuItem, Button } from '@mui/material';
 // hooks
 import useResponsive from '../../../hooks/useResponsive';
 import useCollapseDrawer from '../../../hooks/useCollapseDrawer';
@@ -20,6 +21,12 @@ import navConfig from './NavConfig';
 import NavbarDocs from './NavbarDocs';
 import NavbarAccount from './NavbarAccount';
 import CollapseButton from './CollapseButton';
+import Iconify from '../../../components/Iconify';
+// routes
+import { PATH_AUTH } from '../../../routes/paths';
+// hooks
+import useAuth from '../../../hooks/useAuth';
+import useIsMountedRef from '../../../hooks/useIsMountedRef';
 
 // ----------------------------------------------------------------------
 
@@ -56,6 +63,34 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [pathname]);
 
+  const navigate = useNavigate();
+
+  const { user, logout } = useAuth();
+
+  const isMountedRef = useIsMountedRef();
+
+  // const { enqueueSnackbar } = useSnackbar();
+
+  const [open, setOpen] = useState(null);
+
+  const handleClose = () => {
+    setOpen(null);
+  };
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(PATH_AUTH.login, { replace: true });
+
+      if (isMountedRef.current) {
+        handleClose();
+      }
+    } catch (error) {
+      console.error(error);
+      // enqueueSnackbar('Unable to logout!', { variant: 'error' });
+    }
+  };
+
   const renderContent = (
     <Scrollbar
       sx={{
@@ -85,6 +120,16 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
       </Stack>
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
+
+      <Button
+        variant="text"
+        style={{ width: 'fit-content', padding: '6px 25px' }}
+        onClick={handleLogout}
+        startIcon={<Iconify icon={'mdi:logout'} />}
+        sx={{ m: 1 }}
+      >
+        Đăng xuất
+      </Button>
 
       <Box sx={{ flexGrow: 1 }} />
 
