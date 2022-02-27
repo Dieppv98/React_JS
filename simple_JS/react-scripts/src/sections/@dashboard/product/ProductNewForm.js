@@ -1,7 +1,7 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import React, { useEffect, useMemo, useReducer } from 'react';
-// import { useSnackbar } from 'notistack';
+import React, { useEffect, useMemo } from 'react';
+import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
 import { useForm } from 'react-hook-form';
@@ -20,11 +20,12 @@ ProductNewForm.propTypes = {
   isEdit: PropTypes.bool,
   currentProduct: PropTypes.object,
 };
+const link = process.env.REACT_APP_API_HOST;
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const navigate = useNavigate();
 
-  // const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
+  const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
 
   const NewProductSchema = Yup.object().shape({
     ten_san_pham: Yup.string().required('Tên sản phẩm không được bỏ trống'),
@@ -63,38 +64,26 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [isEdit, currentProduct]);
 
-  const [formInput, setFormInput] = useReducer((state, newState) => ({ ...state, ...newState }), {
-    ten_san_pham: '',
-    ma_san_pham: '',
-    unit_name: '',
-  });
-
-  const onSubmit = async () => {
-    const data = { formInput };
-    console.error(`du lieu: ${data}`);
-    try {
-      // await fetch('http://171.244.141.179:7775/Scripts/Supervision/5_Global.js', {
-      //   method: 'POST',
-      //   body: JSON.stringify(data),
-      //   headers: {
-      //     'Content-Type': 'application/json',
-      //   },
-      // })
-      //   .then((response) => console.log('Success:', JSON.stringify(response)))
-      //   .catch((error) => console.error('Error:', error));
-
-      reset();
-      // enqueueSnackbar(!isEdit ? 'Create success!' : 'Update success!');
-      navigate(PATH_PRODUCT.product.list);
-    } catch (error) {
-      console.error(error);
-    }
-  };
-
-  const handleInput = (evt) => {
-    const { name } = evt.target;
-    const newValue = evt.target.value;
-    setFormInput({ [name]: newValue });
+  const onSubmit = async ({ ma_san_pham, ten_san_pham, unit_name }) => {
+    await fetch(`${link}/product/update`, {
+      method: 'POST',
+      body: JSON.stringify({
+        id: currentProduct.id,
+        ma_san_pham: ma_san_pham.trim(),
+        ten_san_pham: ten_san_pham.trim(),
+        unit_name: unit_name.trim(),
+      }),
+      headers: {
+        'Content-Type': 'application/json',
+      },
+    })
+      .then((response) => {
+        console.log('Success:', JSON.stringify(response));
+        reset();
+        enqueueSnackbar('Cập nhật thành công!');
+        navigate(PATH_PRODUCT.product.list);
+      })
+      .catch((error) => console.error('Error:', error));
   };
 
   return (
@@ -110,9 +99,9 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
               }}
             >
-              <RHFTextField name="ten_san_pham" label="Mã sản phẩm" onChange={handleInput} />
-              <RHFTextField name="ma_san_pham" label="Tên sản phẩm" onChange={handleInput} />
-              <RHFTextField name="unit_name" label="Đơn vị tính" onChange={handleInput} />
+              <RHFTextField name="ten_san_pham" label="Mã sản phẩm" />
+              <RHFTextField name="ma_san_pham" label="Tên sản phẩm" />
+              <RHFTextField name="unit_name" label="Đơn vị tính" />
             </Box>
 
             <Stack alignItems="flex-end" textAlign="right" display="block" sx={{ mt: 3 }}>

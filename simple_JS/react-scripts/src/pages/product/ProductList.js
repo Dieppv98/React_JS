@@ -11,6 +11,10 @@ import {
   Button,
   Container,
   TablePagination,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
@@ -90,6 +94,7 @@ export default function UserList() {
   };
 
   const handleDeleteUser = (userId) => {
+    setOpenDialogAdd(true);
     const deleteUser = userList.filter((user) => user.id !== userId);
     setSelected([]);
     setUserList(deleteUser);
@@ -106,6 +111,8 @@ export default function UserList() {
   const filteredUsers = applySortFilter(userList, getComparator(order, orderBy), filterName);
 
   const isNotFound = !filteredUsers.length && Boolean(filterName);
+
+  const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
   return (
     <Page title="Danh mục sản phẩm">
@@ -242,6 +249,17 @@ export default function UserList() {
           />
         </Card>
       </Container>
+
+      <Dialog open={openDialogAdd} fullWidth maxWidth="xs" onClose={() => setOpenDialogAdd(false)}>
+        <DialogTitle>Thêm mới</DialogTitle>
+        <DialogContent>Fields</DialogContent>
+        <DialogActions>
+          <Button variant="contained" onClick={() => {}}>
+            Confirm
+          </Button>
+          <Button onClick={() => setOpenDialogAdd(false)}>Cancel</Button>
+        </DialogActions>
+      </Dialog>
     </Page>
   );
 }
@@ -280,39 +298,3 @@ function applySortFilter(array, comparator, query) {
   }
   return stabilizedThis.map((el) => el[0]);
 }
-
-// export default function PageOne() {
-//   const [dataTable, setDatatable] = useState([]);
-
-//   useEffect(() => {
-//     fetch('https://jsonplaceholder.typicode.com/todos')
-//       .then((response) => response.json())
-//       .then((data) => setDatatable(data))
-//       .catch((err) => console.log(err));
-//   }, []);
-
-//   return (
-//     <Page title="Page One">
-//       <TableContainer component={Paper}>
-//         <Table sx={{ minWidth: 650 }} aria-label="simple table">
-//           <TableHead>
-//             <TableRow>
-//               <TableCell>Id</TableCell>
-//               <TableCell align="right">Title</TableCell>
-//             </TableRow>
-//           </TableHead>
-//           <TableBody>
-//             {dataTable.map((row) => (
-//               <TableRow key={row.id} sx={{ '&:last-child td, &:last-child th': { border: 0 } }}>
-//                 <TableCell component="th" scope="row">
-//                   {row.id}
-//                 </TableCell>
-//                 <TableCell align="right">{row.title}</TableCell>
-//               </TableRow>
-//             ))}
-//           </TableBody>
-//         </Table>
-//       </TableContainer>
-//     </Page>
-//   );
-// }
