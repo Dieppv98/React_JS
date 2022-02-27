@@ -1,5 +1,9 @@
 import { useEffect, useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
+import * as Yup from 'yup';
+// form
+import { useForm } from 'react-hook-form';
+import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import {
   Table,
@@ -15,14 +19,15 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
+  Box,
+  Stack,
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
 import { PATH_PRODUCT } from '../../routes/paths';
 // hooks
+import { FormProvider, RHFCheckbox, RHFSelect, RHFTextField, RHFRadioGroup } from '../../components/hook-form';
 import useSettings from '../../hooks/useSettings';
-// _mock_
-// import { _userList } from '../_mock';
 // components
 import Page from '../../components/Page';
 import Iconify from '../../components/Iconify';
@@ -31,6 +36,7 @@ import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user/list';
+import { countries } from '../../_mock';
 
 // ----------------------------------------------------------------------
 
@@ -60,12 +66,18 @@ const link = process.env.REACT_APP_API_HOST;
 
 export default function UserList() {
   const { themeStretch } = useSettings();
+  const [page, setPage] = useState(0);
+  const [order, setOrder] = useState('asc');
+  const [selected, setSelected] = useState([]);
+  const [orderBy, setOrderBy] = useState('ten_san_pham');
+  const [filterName, setFilterName] = useState('');
+  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const [userList, setUserList] = useState([]);
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
-    body: JSON.stringify({ Keywords: '' }),
+    body: JSON.stringify({ Keywords: filterName || '' }),
   };
 
   useEffect(() => {
@@ -75,13 +87,6 @@ export default function UserList() {
       .catch((err) => console.log(err));
   }, []);
   console.log(userList);
-
-  const [page, setPage] = useState(0);
-  const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
-  const [orderBy, setOrderBy] = useState('ten_san_pham');
-  const [filterName, setFilterName] = useState('');
-  const [rowsPerPage, setRowsPerPage] = useState(5);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -93,17 +98,13 @@ export default function UserList() {
     setPage(0);
   };
 
-  const handleDeleteUser = (userId) => {
+  const handleOpenModal = async (id) => {
+    await fetch(`${link}/product/getbyid/${id}`)
+      .then((response) => {
+        console.log('Sản phẩm:', JSON.stringify(response));
+      })
+      .catch((error) => console.error('Error:', error));
     setOpenDialogAdd(true);
-    const deleteUser = userList.filter((user) => user.id !== userId);
-    setSelected([]);
-    setUserList(deleteUser);
-  };
-
-  const handleDeleteMultiUser = (selected) => {
-    const deleteUsers = userList.filter((user) => !selected.includes(user.ten_san_pham));
-    setSelected([]);
-    setUserList(deleteUsers);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -113,6 +114,37 @@ export default function UserList() {
   const isNotFound = !filteredUsers.length && Boolean(filterName);
 
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
+
+  const NewDetailSchema = Yup.object().shape({
+    size: Yup.string().required('Size không được bỏ trống'),
+    color: Yup.string().required('Màu sắc không được bỏ trống'),
+    quantity_limit: Yup.string().required('Giới hạn không được bỏ trống'),
+  });
+
+  const defaultValues = {
+    size: '',
+    color: '',
+    quantity_limit: '',
+  };
+
+  const methods = useForm({
+    resolver: yupResolver(NewDetailSchema),
+    defaultValues,
+  });
+
+  const {
+    handleSubmit,
+    formState: { isSubmitting },
+  } = methods;
+
+  const onSubmit = async (data) => {
+    try {
+      console.log('data', data);
+      // todo
+    } catch (error) {
+      console.error(error);
+    }
+  };
 
   return (
     <Page title="Danh mục sản phẩm">
@@ -134,11 +166,7 @@ export default function UserList() {
         />
 
         <Card>
-          <UserListToolbar
-            filterName={filterName}
-            onFilterName={handleFilterByName}
-            onDeleteUsers={() => handleDeleteMultiUser(selected)}
-          />
+          <UserListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
             <TableContainer sx={{ minWidth: 800 }}>
@@ -214,7 +242,7 @@ export default function UserList() {
 
                         <TableCell align="center">
                           {/* <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} /> */}
-                          <ProductMoreMenu onPlus={() => handleDeleteUser(id)} productId={id} />
+                          <ProductMoreMenu onPlus={() => handleOpenModal(id)} productId={id} />
                         </TableCell>
                       </TableRow>
                     );
@@ -251,21 +279,42 @@ export default function UserList() {
       </Container>
 
       <Dialog open={openDialogAdd} fullWidth maxWidth="xs" onClose={() => setOpenDialogAdd(false)}>
-        <DialogTitle>Thêm mới</DialogTitle>
-        <DialogContent>Fields</DialogContent>
-        <DialogActions>
-          <Button variant="contained" onClick={() => {}}>
-            Confirm
-          </Button>
-          <Button onClick={() => setOpenDialogAdd(false)}>Cancel</Button>
-        </DialogActions>
+        <DialogTitle>Thêm mới phân loại sản phẩm</DialogTitle>
+        <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
+          <DialogContent>
+            <Stack spacing={1}>
+              <RHFSelect name="size" label="size" style={{ marginBottom: '15px' }}>
+                {countries.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+
+              <RHFSelect name="color" label="Màu sắc" style={{ marginBottom: '15px' }}>
+                {countries.map((option) => (
+                  <option key={option.code} value={option.label}>
+                    {option.label}
+                  </option>
+                ))}
+              </RHFSelect>
+
+              <RHFTextField name="quantity_limit" label="Giới hạn gửi cảnh báo (sp)" style={{ marginBottom: '15px' }} />
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button type="submit" variant="contained" loading={isSubmitting}>
+              Lưu
+            </Button>
+            <Button onClick={() => setOpenDialogAdd(false)}>Đóng</Button>
+          </DialogActions>
+        </FormProvider>
       </Dialog>
     </Page>
   );
 }
 
 // ----------------------------------------------------------------------
-
 function descendingComparator(a, b, orderBy) {
   if (b[orderBy] < a[orderBy]) {
     return -1;

@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { MenuItem, IconButton } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_PRODUCT } from '../../../../routes/paths';
+import { PATH_PRODUCT } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import MenuPopover from '../../../../components/MenuPopover';
