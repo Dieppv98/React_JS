@@ -108,17 +108,12 @@ export default function UserList() {
       .then((response) => response.json())
       .then((data) => setInfoModal(data))
       .catch((error) => console.error('Error:', error));
-
     setOpenDialogAdd(true);
   };
 
-  const setInfoModal = async (data) => {
+  const setInfoModal = (data) => {
+    setProductIdModal(data.id);
     setProductName(data.ten_san_pham);
-    const product_Id = data.id;
-    console.log('productId', product_Id);
-    await setProductIdModal(product_Id);
-    console.log('Thông tin modal:', data);
-    console.log('Thông tin productId:', productIdModal);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -153,7 +148,14 @@ export default function UserList() {
 
   const onSubmit = async (data) => {
     try {
+      const info = {
+        id: productIdModal,
+        size: data.size * 1,
+        color: data.color * 1,
+        quantity_limit: data.quantity_limit * 1,
+      };
       console.log('data', data);
+      console.log('info', info);
       // todo
     } catch (error) {
       console.error(error);

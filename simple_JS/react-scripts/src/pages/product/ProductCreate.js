@@ -24,7 +24,6 @@ export default function UserCreate() {
 
   const [currentProduct, setCurrentProduct] = useState();
 
-  console.log(`userId    ${productId}`);
   useEffect(() => {
     fetch(`${link}/product/getbyid/${productId}`)
       .then((response) => response.json())
