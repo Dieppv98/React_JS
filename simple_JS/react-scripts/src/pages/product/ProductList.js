@@ -21,6 +21,7 @@ import {
   DialogActions,
   Box,
   Stack,
+  Typography,
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
@@ -37,6 +38,7 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user/list';
 import { countries } from '../../_mock';
+import Label from '../../components/Label';
 
 // ----------------------------------------------------------------------
 
@@ -63,6 +65,7 @@ const TABLE_HEAD_DETAIL = [
 // ----------------------------------------------------------------------
 // console.log(process.env.REACT_APP_API_HOST);
 const link = process.env.REACT_APP_API_HOST;
+console.log('link', link);
 
 export default function UserList() {
   const { themeStretch } = useSettings();
@@ -72,8 +75,10 @@ export default function UserList() {
   const [orderBy, setOrderBy] = useState('ten_san_pham');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
-
   const [userList, setUserList] = useState([]);
+  const [productName, setProductName] = useState('');
+  const [productIdModal, setProductIdModal] = useState(0);
+
   const requestOptions = {
     method: 'POST',
     headers: { 'Content-Type': 'application/json' },
@@ -100,11 +105,20 @@ export default function UserList() {
 
   const handleOpenModal = async (id) => {
     await fetch(`${link}/product/getbyid/${id}`)
-      .then((response) => {
-        console.log('Sản phẩm:', JSON.stringify(response));
-      })
+      .then((response) => response.json())
+      .then((data) => setInfoModal(data))
       .catch((error) => console.error('Error:', error));
+
     setOpenDialogAdd(true);
+  };
+
+  const setInfoModal = async (data) => {
+    setProductName(data.ten_san_pham);
+    const product_Id = data.id;
+    console.log('productId', product_Id);
+    await setProductIdModal(product_Id);
+    console.log('Thông tin modal:', data);
+    console.log('Thông tin productId:', productIdModal);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -282,6 +296,9 @@ export default function UserList() {
         <DialogTitle>Thêm mới phân loại sản phẩm</DialogTitle>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+              {productName}
+            </Typography>
             <Stack spacing={1}>
               <RHFSelect name="size" label="size" style={{ marginBottom: '15px' }}>
                 {countries.map((option) => (
