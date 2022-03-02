@@ -132,7 +132,6 @@ export default function UserList() {
     })
       .then((response) => response.json())
       .then((rs) => setSizeList(rs));
-
     console.log('colorList', colorList);
     console.log('sizeList', sizeList);
   };
