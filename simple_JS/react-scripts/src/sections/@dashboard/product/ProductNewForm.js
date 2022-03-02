@@ -65,26 +65,46 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   }, [isEdit, currentProduct]);
 
   const onSubmit = async ({ ma_san_pham, ten_san_pham, unit_name }) => {
-    await fetch(`${link}/product/update`, {
-      method: 'POST',
-      body: JSON.stringify({
-        id: currentProduct.id,
-        ma_san_pham: ma_san_pham.trim(),
-        ten_san_pham: ten_san_pham.trim(),
-        unit_name: unit_name.trim(),
-      }),
-      headers: {
-        'Content-Type': 'application/json',
-      },
-    })
+    const info = {
+      id: currentProduct.id,
+      ma_san_pham: ma_san_pham.trim(),
+      ten_san_pham: ten_san_pham.trim(),
+      unit_name: unit_name.trim(),
+    };
+
+    await fetch(`${link}/product/CheckDuplicateMaSanPham?ma_san_pham=${info.ma_san_pham}&id=${info.id}`)
       .then((response) => response.json())
       .then((rs) => {
-        if (rs >= 1) {
-          reset();
-          enqueueSnackbar('Cập nhật thành công!');
-          navigate(PATH_PRODUCT.product.list);
-        } else {
-          enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
+        if (rs === true) {
+          fetch(`${link}/product/checkDuplicateTenSanPham?ten_san_pham=${info.ten_san_pham}&id=${info.id}`)
+            .then((data) => data.json())
+            .then((result) => {
+              if (result === true) {
+                fetch(`${link}/product/update`, {
+                  method: 'POST',
+                  body: JSON.stringify(info),
+                  headers: {
+                    'Content-Type': 'application/json',
+                  },
+                })
+                  .then((response) => response.json())
+                  .then((rs) => {
+                    if (rs >= 1) {
+                      reset();
+                      enqueueSnackbar('Cập nhật thành công!');
+                      navigate(PATH_PRODUCT.product.list);
+                    } else {
+                      enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
+                    }
+                  })
+                  .catch((error) => console.error('Error:', error));
+              } else {
+                enqueueSnackbar('Tên sản phẩm đã tồn tại!', { variant: 'warning' });
+              }
+            });
+        }
+        if (rs === false) {
+          enqueueSnackbar(`Mã sản phẩm đã tồn tại!`, { variant: 'warning' });
         }
       })
       .catch((error) => console.error('Error:', error));

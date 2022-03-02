@@ -47,8 +47,8 @@ const sidebarConfig = [
         icon: ICONS.dashboard,
         children: [
           { title: 'Sản phẩm', path: 'product/list' },
-          { title: 'Size', path: '' },
-          { title: 'Màu sắc', path: '' },
+          { title: 'Size', path: 'size/list' },
+          { title: 'Màu sắc', path: 'color/list' },
           { title: 'Người dùng', path: '' },
           { title: 'Thông tin cá nhân', path: '' },
           { title: 'Đổi mật khẩu', path: '' },

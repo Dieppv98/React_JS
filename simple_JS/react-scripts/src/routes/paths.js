@@ -7,6 +7,8 @@ function path(root, sublink) {
 const ROOTS_AUTH = '/auth';
 const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_PRODUCT = '/product';
+const ROOTS_SIZE = '/size';
+const ROOTS_COLOR = '/color';
 
 // ----------------------------------------------------------------------
 
@@ -89,6 +91,22 @@ export const PATH_PRODUCT = {
     list: path(ROOTS_PRODUCT, '/list'),
     new: path(ROOTS_PRODUCT, '/new'),
     edit: path(ROOTS_PRODUCT, '/edit'),
+  },
+};
+
+export const PATH_SIZE = {
+  root: ROOTS_SIZE,
+  product: {
+    root: path(ROOTS_SIZE, ''),
+    list: path(ROOTS_SIZE, '/list'),
+  },
+};
+
+export const PATH_COLOR = {
+  root: ROOTS_COLOR,
+  product: {
+    root: path(ROOTS_COLOR, ''),
+    list: path(ROOTS_COLOR, '/list'),
   },
 };
 

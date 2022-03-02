@@ -24,6 +24,10 @@ export default function Router() {
     {
       path: 'auth/login',
       element: <Login />,
+      children: [
+        { element: <Navigate to="auth/login" replace />, index: true },
+        { path: 'auth/login', element: <Navigate to="auth/login" replace />, index: true },
+      ],
     },
     {
       path: '/',
@@ -41,6 +45,8 @@ export default function Router() {
             { path: '/product/list', element: <ProductList /> },
             { path: '/product/new', element: <ProductCreate /> },
             { path: 'product/edit/:productId', element: <ProductCreate /> },
+            { path: 'size/list', element: <SizeList /> },
+            { path: 'color/list', element: <ColorList /> },
 
             { path: '/dashboard/user/six', element: <PageSix /> },
           ],
@@ -71,3 +77,5 @@ const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const ProductList = Loadable(lazy(() => import('../pages/product/ProductList')));
 const ProductCreate = Loadable(lazy(() => import('../pages/product/ProductCreate')));
+const SizeList = Loadable(lazy(() => import('../pages/size/SizeList')));
+const ColorList = Loadable(lazy(() => import('../pages/color/ColorList')));

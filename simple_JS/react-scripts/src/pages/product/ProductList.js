@@ -42,8 +42,6 @@ import SearchNotFound from '../../components/SearchNotFound';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { UserListHead, UserListToolbar } from '../../sections/@dashboard/user/list';
-import { countries } from '../../_mock';
-import Label from '../../components/Label';
 
 // ----------------------------------------------------------------------
 
