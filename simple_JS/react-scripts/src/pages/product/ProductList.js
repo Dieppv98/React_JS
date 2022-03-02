@@ -78,6 +78,8 @@ export default function UserList() {
   const [userList, setUserList] = useState([]);
   const [productName, setProductName] = useState('');
   const [productIdModal, setProductIdModal] = useState(0);
+  const [colorList, setColorList] = useState([]);
+  const [sizeList, setSizeList] = useState([]);
 
   const requestOptions = {
     method: 'POST',
@@ -111,9 +113,28 @@ export default function UserList() {
     setOpenDialogAdd(true);
   };
 
-  const setInfoModal = (data) => {
+  const setInfoModal = async (data) => {
     setProductIdModal(data.id);
     setProductName(data.ten_san_pham);
+
+    await fetch(`${link}/color/get`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Keywords: filterName || '' }),
+    })
+      .then((response) => response.json())
+      .then((rs) => setColorList(rs));
+
+    await fetch(`${link}/size/get`, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ Keywords: filterName || '' }),
+    })
+      .then((response) => response.json())
+      .then((rs) => setSizeList(rs));
+
+    console.log('colorList', colorList);
+    console.log('sizeList', sizeList);
   };
 
   const emptyRows = page > 0 ? Math.max(0, (1 + page) * rowsPerPage - userList.length) : 0;
@@ -318,7 +339,7 @@ export default function UserList() {
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="quantity_limit" label="Giới hạn gửi cảnh báo (sp)" style={{ marginBottom: '15px' }} />
+              <RHFTextField name="quantity_limit" label="Giới hạn gửi cảnh báo (sp)" />
             </Stack>
           </DialogContent>
           <DialogActions>
