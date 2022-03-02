@@ -77,11 +77,15 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
         'Content-Type': 'application/json',
       },
     })
-      .then((response) => {
-        console.log('Success:', JSON.stringify(response));
-        reset();
-        enqueueSnackbar('Cập nhật thành công!');
-        navigate(PATH_PRODUCT.product.list);
+      .then((response) => response.json())
+      .then((rs) => {
+        if (rs >= 1) {
+          reset();
+          enqueueSnackbar('Cập nhật thành công!');
+          navigate(PATH_PRODUCT.product.list);
+        } else {
+          enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
+        }
       })
       .catch((error) => console.error('Error:', error));
   };

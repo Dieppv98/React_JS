@@ -1,6 +1,7 @@
 import { useEffect, useState } from 'react';
-import { Link as RouterLink } from 'react-router-dom';
+import { Link as RouterLink, useNavigate } from 'react-router-dom';
 import * as Yup from 'yup';
+import { useSnackbar } from 'notistack';
 // form
 import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
@@ -22,6 +23,10 @@ import {
   Box,
   Stack,
   Typography,
+  Select,
+  MenuItem,
+  InputLabel,
+  FormControl,
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
@@ -68,6 +73,8 @@ const link = process.env.REACT_APP_API_HOST;
 console.log('link', link);
 
 export default function UserList() {
+  const navigate = useNavigate();
+  const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
   const { themeStretch } = useSettings();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
@@ -93,7 +100,6 @@ export default function UserList() {
       .then((data) => setUserList(data.data))
       .catch((err) => console.log(err));
   }, []);
-  console.log(userList);
 
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
@@ -120,18 +126,18 @@ export default function UserList() {
     await fetch(`${link}/color/get`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Keywords: filterName || '' }),
+      body: JSON.stringify({ Keywords: '' }),
     })
       .then((response) => response.json())
-      .then((rs) => setColorList(rs));
+      .then((rs) => setColorList(rs.data));
 
     await fetch(`${link}/size/get`, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ Keywords: filterName || '' }),
+      body: JSON.stringify({ Keywords: '' }),
     })
       .then((response) => response.json())
-      .then((rs) => setSizeList(rs));
+      .then((rs) => setSizeList(rs.data));
     console.log('colorList', colorList);
     console.log('sizeList', sizeList);
   };
@@ -145,15 +151,15 @@ export default function UserList() {
   const [openDialogAdd, setOpenDialogAdd] = useState(false);
 
   const NewDetailSchema = Yup.object().shape({
-    size: Yup.string().required('Size không được bỏ trống'),
-    color: Yup.string().required('Màu sắc không được bỏ trống'),
-    quantity_limit: Yup.string().required('Giới hạn không được bỏ trống'),
+    size: Yup.number().typeError('Bạn chưa chọn size!').min(1, 'Bạn chưa chọn size!'),
+    color: Yup.number().typeError('Bạn chưa chọn màu sắc!').min(1, 'Bạn chưa chọn màu sắc!'),
+    quantity_limit: Yup.number().typeError('Bạn chưa nhập số lượng giới hạn!').min(1, 'Giới hạn phải lớn hơn 0!'),
   });
 
   const defaultValues = {
-    size: '',
-    color: '',
-    quantity_limit: '',
+    size: 0,
+    color: 0,
+    quantity_limit: 1,
   };
 
   const methods = useForm({
@@ -169,14 +175,44 @@ export default function UserList() {
   const onSubmit = async (data) => {
     try {
       const info = {
-        id: productIdModal,
+        san_pham_id: productIdModal,
         size: data.size * 1,
         color: data.color * 1,
         quantity_limit: data.quantity_limit * 1,
       };
-      console.log('data', data);
-      console.log('info', info);
-      // todo
+      await fetch(
+        `${link}/product/CheckDuplicatedChiTietSanPham?size=${info.size}&color=${info.color}&san_pham_id=${info.san_pham_id}`
+      )
+        .then((response) => response.json())
+        .then((rs) => {
+          if (rs === true) {
+            console.log('rs1234', rs);
+            fetch(`${link}/product/AddChiTietSanPham`, {
+              method: 'POST',
+              body: JSON.stringify(info),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((response) => response.json())
+              .then((result) => {
+                if (result === 1) {
+                  console.log('Success:', result);
+                  enqueueSnackbar('Cập nhật thành công!');
+                  setOpenDialogAdd(false);
+                  fetch(`${link}/product/getall`, requestOptions)
+                    .then((response) => response.json())
+                    .then((data) => setUserList(data.data));
+                } else {
+                  enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
+                }
+              })
+              .catch((error) => console.error('Error:', error));
+          }
+          if (rs === false) {
+            enqueueSnackbar(`Phân loại cho sản phẩm ${productName} đã tồn tại!`, { variant: 'warning' });
+          }
+        });
     } catch (error) {
       console.error(error);
     }
@@ -315,30 +351,32 @@ export default function UserList() {
       </Container>
 
       <Dialog open={openDialogAdd} fullWidth maxWidth="xs" onClose={() => setOpenDialogAdd(false)}>
-        <DialogTitle>Thêm mới phân loại sản phẩm</DialogTitle>
+        <DialogTitle>Thêm mới một phân loại</DialogTitle>
         <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
           <DialogContent>
             <Typography variant="subtitle1" sx={{ mb: 2 }}>
-              {productName}
+              SP: {productName}
             </Typography>
             <Stack spacing={1}>
               <RHFSelect name="size" label="size" style={{ marginBottom: '15px' }}>
-                {countries.map((option) => (
-                  <option key={option.code} value={option.label}>
-                    {option.label}
+                <option value={0}>Size</option>
+                {sizeList.map((option) => (
+                  <option key={option.name} value={option.id}>
+                    {option.name}
                   </option>
                 ))}
               </RHFSelect>
 
               <RHFSelect name="color" label="Màu sắc" style={{ marginBottom: '15px' }}>
-                {countries.map((option) => (
-                  <option key={option.code} value={option.label}>
-                    {option.label}
+                <option value={0}>Màu sắc</option>
+                {colorList.map((option) => (
+                  <option key={option.id} value={option.id}>
+                    {option.name}
                   </option>
                 ))}
               </RHFSelect>
 
-              <RHFTextField name="quantity_limit" label="Giới hạn gửi cảnh báo (sp)" />
+              <RHFTextField name="quantity_limit" type="number" label="Giới hạn gửi cảnh báo (sp)" />
             </Stack>
           </DialogContent>
           <DialogActions>
