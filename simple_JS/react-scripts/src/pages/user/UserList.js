@@ -47,7 +47,6 @@ const TABLE_HEAD = [
 ];
 
 const link = process.env.REACT_APP_API_HOST;
-console.log('link', link);
 
 export default function UserList() {
   const { enqueueSnackbar } = useSnackbar();
@@ -75,7 +74,6 @@ export default function UserList() {
       .catch((err) => console.log(err));
   }, []);
 
-  console.log('userList', userList);
   const handleChangeRowsPerPage = (event) => {
     setRowsPerPage(parseInt(event.target.value, 10));
     setPage(0);

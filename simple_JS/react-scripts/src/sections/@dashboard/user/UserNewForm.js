@@ -1,6 +1,6 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import { useCallback, useEffect, useMemo } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
@@ -9,7 +9,7 @@ import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
 import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, Typography } from '@mui/material';
-import imageToBase64 from 'image-to-base64/browser';
+// import imageToBase64 from 'image-to-base64/browser';
 // utils
 import { fData } from '../../../utils/formatNumber';
 // routes
@@ -28,6 +28,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
+  const [avatar, setAvartar] = useState('');
 
   const NewUserSchema = Yup.object().shape({
     fullName: Yup.string().required('Tên đầy đủ không được bỏ trống!'),
@@ -44,7 +45,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
       fullName: currentUser?.fullName?.trim() || '',
       userName: currentUser?.userName?.trim() || '',
       email: currentUser?.email?.trim() || '',
-      password: '',
+      password: currentUser?.passWord == null ? '' : '123456789',
       tel: currentUser?.tel?.trim() || '',
       address: currentUser?.address?.trim() || '',
     }),
@@ -76,21 +77,23 @@ export default function UserNewForm({ isEdit, currentUser }) {
 
   const onSubmit = async (data) => {
     try {
+      data.address = avatar;
       console.log('data', data);
+
       await new Promise((resolve) => setTimeout(resolve, 500));
       reset();
       enqueueSnackbar('Cập nhật thành công!');
       navigate(PATH_USER.user.list);
     } catch (error) {
-      console.error(error);
+      console.log('error: ', error);
     }
   };
 
   const handleDrop = useCallback(
-    (acceptedFiles) => {
+    async (acceptedFiles) => {
       const file = acceptedFiles[0];
-      console.log('file', file);
-
+      const base64 = await convertToBase64(file);
+      setAvartar(base64);
       if (file) {
         setValue(
           'address',
@@ -102,6 +105,18 @@ export default function UserNewForm({ isEdit, currentUser }) {
     },
     [setValue]
   );
+
+  const convertToBase64 = (file) =>
+    new Promise((resolve, reject) => {
+      const fileReader = new FileReader();
+      fileReader.readAsDataURL(file);
+      fileReader.onload = () => {
+        resolve(fileReader.result);
+      };
+      fileReader.onerror = (error) => {
+        reject(error);
+      };
+    });
 
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
@@ -149,7 +164,12 @@ export default function UserNewForm({ isEdit, currentUser }) {
               <RHFTextField name="userName" label="Tên tài khoản" />
 
               {/* {!isEdit && <RHFTextField name="password" label="Mật khẩu" />} */}
-              <RHFTextField name="password" label="Mật khẩu" />
+              {isEdit ? (
+                <RHFTextField name="password" label="Mật khẩu" style={{ display: 'none' }} />
+              ) : (
+                <RHFTextField name="password" label="Mật khẩu" />
+              )}
+
               <RHFTextField name="tel" label="Số điện thoại" />
             </Box>
 
