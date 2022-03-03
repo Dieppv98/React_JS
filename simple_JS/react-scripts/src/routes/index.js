@@ -47,8 +47,10 @@ export default function Router() {
             { path: 'product/edit/:productId', element: <ProductCreate /> },
             { path: 'size/list', element: <SizeList /> },
             { path: 'color/list', element: <ColorList /> },
-
-            { path: '/dashboard/user/six', element: <PageSix /> },
+            { path: 'user/list', element: <UserList /> },
+            { path: 'account/changePassword', element: <ChangePassWord /> },
+            { path: '/user/new', element: <UserCreate /> },
+            { path: 'user/edit/:userId', element: <UserCreate /> },
           ],
         },
       ],
@@ -71,11 +73,11 @@ const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
 const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
 const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
-const PageFour = Loadable(lazy(() => import('../pages/PageFour')));
-const PageFive = Loadable(lazy(() => import('../pages/PageFive')));
-const PageSix = Loadable(lazy(() => import('../pages/PageSix')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const ProductList = Loadable(lazy(() => import('../pages/product/ProductList')));
 const ProductCreate = Loadable(lazy(() => import('../pages/product/ProductCreate')));
 const SizeList = Loadable(lazy(() => import('../pages/size/SizeList')));
 const ColorList = Loadable(lazy(() => import('../pages/color/ColorList')));
+const UserList = Loadable(lazy(() => import('../pages/user/UserList')));
+const ChangePassWord = Loadable(lazy(() => import('../sections/@dashboard/user/account/AccountChangePassword')));
+const UserCreate = Loadable(lazy(() => import('../pages/user/UserCreate')));

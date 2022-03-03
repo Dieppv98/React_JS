@@ -1,10 +1,18 @@
 import { useState } from 'react';
+import { useSnackbar } from 'notistack';
+import { useNavigate, Link as RouterLink } from 'react-router-dom';
 // @mui
 import { alpha } from '@mui/material/styles';
-import { Box, Divider, Typography, Stack, MenuItem, Avatar } from '@mui/material';
+import { Divider, MenuItem, Avatar, Button } from '@mui/material';
 // components
 import MenuPopover from '../../../components/MenuPopover';
 import { IconButtonAnimate } from '../../../components/animate';
+// routes
+import { PATH_AUTH, PATH_ACCOUNT } from '../../../routes/paths';
+// hooks
+import useAuth from '../../../hooks/useAuth';
+import useIsMountedRef from '../../../hooks/useIsMountedRef';
+import Iconify from '../../../components/Iconify';
 
 // ----------------------------------------------------------------------
 
@@ -36,6 +44,28 @@ export default function AccountPopover() {
     setOpen(null);
   };
 
+  const navigate = useNavigate();
+
+  const { user, logout } = useAuth();
+
+  const isMountedRef = useIsMountedRef();
+
+  const { enqueueSnackbar } = useSnackbar();
+
+  const handleLogout = async () => {
+    try {
+      await logout();
+      navigate(PATH_AUTH.login, { replace: true });
+
+      if (isMountedRef.current) {
+        handleClose();
+      }
+    } catch (error) {
+      console.error(error);
+      enqueueSnackbar('Đã xảy ra lỗi khi đăng xuất!', { variant: 'error' });
+    }
+  };
+
   return (
     <>
       <IconButtonAnimate
@@ -62,6 +92,7 @@ export default function AccountPopover() {
         open={Boolean(open)}
         anchorEl={open}
         onClose={handleClose}
+        style={{ left: '50px' }}
         sx={{
           p: 0,
           mt: 1.5,
@@ -72,28 +103,30 @@ export default function AccountPopover() {
           },
         }}
       >
-        {/* <Box sx={{ my: 1.5, px: 2.5 }}>
-          <Typography variant="subtitle2" noWrap>
-            Rayan Moran
-          </Typography>
-          <Typography variant="body2" sx={{ color: 'text.secondary' }} noWrap>
-            rayan.moran@gmail.com
-          </Typography>
-        </Box>
+        <MenuItem sx={{ m: 1 }}>
+          <Button variant="text" startIcon={<Iconify icon={'ic:sharp-account-circle'} />} style={{ color: '#ff45f1' }}>
+            Thông tin cá nhân
+          </Button>
+        </MenuItem>
+        <MenuItem sx={{ m: 1 }} to={PATH_ACCOUNT.account.changepassword}>
+          <Button
+            variant="text"
+            component={RouterLink}
+            to={PATH_ACCOUNT.account.changepassword}
+            startIcon={<Iconify icon={'ic:sharp-change-circle'} />}
+            style={{ color: '#ff5e00' }}
+          >
+            Đổi mật khẩu
+          </Button>
+        </MenuItem>
 
         <Divider sx={{ borderStyle: 'dashed' }} />
 
-        <Stack sx={{ p: 1 }}>
-          {MENU_OPTIONS.map((option) => (
-            <MenuItem key={option.label} to={option.linkTo} onClick={handleClose}>
-              {option.label}
-            </MenuItem>
-          ))}
-        </Stack>
-
-        <Divider sx={{ borderStyle: 'dashed' }} /> */}
-
-        <MenuItem sx={{ m: 1 }}>Logout</MenuItem>
+        <MenuItem sx={{ m: 1 }} onClick={handleLogout}>
+          <Button variant="text" startIcon={<Iconify icon={'mdi:logout'} />} style={{ color: 'red' }}>
+            Đăng xuất
+          </Button>
+        </MenuItem>
       </MenuPopover>
     </>
   );

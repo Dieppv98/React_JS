@@ -9,6 +9,8 @@ const ROOTS_DASHBOARD = '/dashboard';
 const ROOTS_PRODUCT = '/product';
 const ROOTS_SIZE = '/size';
 const ROOTS_COLOR = '/color';
+const ROOTS_USER = '/user';
+const ROOTS_ACCOUNT = '/account';
 
 // ----------------------------------------------------------------------
 
@@ -96,7 +98,7 @@ export const PATH_PRODUCT = {
 
 export const PATH_SIZE = {
   root: ROOTS_SIZE,
-  product: {
+  size: {
     root: path(ROOTS_SIZE, ''),
     list: path(ROOTS_SIZE, '/list'),
   },
@@ -104,9 +106,27 @@ export const PATH_SIZE = {
 
 export const PATH_COLOR = {
   root: ROOTS_COLOR,
-  product: {
+  color: {
     root: path(ROOTS_COLOR, ''),
     list: path(ROOTS_COLOR, '/list'),
+  },
+};
+
+export const PATH_USER = {
+  root: ROOTS_USER,
+  user: {
+    root: path(ROOTS_USER, ''),
+    list: path(ROOTS_USER, '/list'),
+    new: path(ROOTS_USER, '/new'),
+    edit: path(ROOTS_USER, '/edit'),
+  },
+};
+
+export const PATH_ACCOUNT = {
+  root: ROOTS_ACCOUNT,
+  account: {
+    root: path(ROOTS_ACCOUNT, ''),
+    changepassword: path(ROOTS_ACCOUNT, '/changePassword'),
   },
 };
 

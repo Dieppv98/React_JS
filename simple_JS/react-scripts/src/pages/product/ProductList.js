@@ -311,7 +311,6 @@ export default function UserList() {
                         </TableCell>
 
                         <TableCell align="center">
-                          {/* <UserMoreMenu onDelete={() => handleDeleteUser(id)} userName={ten_san_pham} /> */}
                           <ProductMoreMenu onPlus={() => handleOpenModal(id)} productId={id} />
                         </TableCell>
                       </TableRow>

@@ -49,9 +49,9 @@ const sidebarConfig = [
           { title: 'Sản phẩm', path: 'product/list' },
           { title: 'Size', path: 'size/list' },
           { title: 'Màu sắc', path: 'color/list' },
-          { title: 'Người dùng', path: '' },
-          { title: 'Thông tin cá nhân', path: '' },
-          { title: 'Đổi mật khẩu', path: '' },
+          { title: 'Người dùng', path: 'user/list' },
+          // { title: 'Thông tin cá nhân', path: '' },
+          // { title: 'Đổi mật khẩu', path: 'account/changePassword' },
         ],
       },
       {

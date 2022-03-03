@@ -1,11 +1,10 @@
 import PropTypes from 'prop-types';
-import { paramCase } from 'change-case';
 import { useState } from 'react';
 import { Link as RouterLink } from 'react-router-dom';
 // @mui
 import { MenuItem, IconButton } from '@mui/material';
 // routes
-import { PATH_DASHBOARD } from '../../../../routes/paths';
+import { PATH_USER } from '../../../../routes/paths';
 // components
 import Iconify from '../../../../components/Iconify';
 import MenuPopover from '../../../../components/MenuPopover';
@@ -14,10 +13,11 @@ import MenuPopover from '../../../../components/MenuPopover';
 
 UserMoreMenu.propTypes = {
   onDelete: PropTypes.func,
-  userName: PropTypes.string,
+  userId: PropTypes.number,
+  onReset: PropTypes.func,
 };
 
-export default function UserMoreMenu({ onDelete, userName }) {
+export default function UserMoreMenu({ onDelete, userId, onReset }) {
   const [open, setOpen] = useState(null);
 
   const handleOpen = (event) => {
@@ -49,18 +49,23 @@ export default function UserMoreMenu({ onDelete, userName }) {
         arrow="right-top"
         sx={{
           mt: -1,
-          width: 160,
+          width: 180,
           '& .MuiMenuItem-root': { px: 1, typography: 'body2', borderRadius: 0.75 },
         }}
       >
         <MenuItem onClick={onDelete} sx={{ color: 'error.main' }}>
           <Iconify icon={'eva:trash-2-outline'} sx={{ ...ICON }} />
-          Delete
+          Xóa
         </MenuItem>
 
-        <MenuItem component={RouterLink} to={`${PATH_DASHBOARD.user.root}/${paramCase(userName)}/edit`}>
+        <MenuItem component={RouterLink} to={`${PATH_USER.root}/edit/${userId}`}>
           <Iconify icon={'eva:edit-fill'} sx={{ ...ICON }} />
-          Edit
+          Chỉnh sửa
+        </MenuItem>
+
+        <MenuItem onClick={onReset} sx={{ color: '#ff5e00' }}>
+          <Iconify icon={'eva:refresh-fill'} sx={{ ...ICON }} />
+          Reset mật khẩu
         </MenuItem>
       </MenuPopover>
     </>

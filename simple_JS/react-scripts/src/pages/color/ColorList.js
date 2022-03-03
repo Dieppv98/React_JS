@@ -175,7 +175,7 @@ export default function UserList() {
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
                     const { id, name } = row;
                     return (
-                      <TableRow hover key={id} tabIndex={-1} sx={{ borderBottom: 0.1 }}>
+                      <TableRow hover key={id} tabIndex={-1}>
                         <TableCell align="center">{index + 1}</TableCell>
                         <TableCell align="center">{name}</TableCell>
                       </TableRow>

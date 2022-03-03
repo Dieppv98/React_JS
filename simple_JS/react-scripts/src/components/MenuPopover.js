@@ -89,11 +89,11 @@ MenuPopover.propTypes = {
   ]),
 };
 
-export default function MenuPopover({ children, arrow = 'top-right', disabledArrow, sx, ...other }) {
+export default function MenuPopover({ children, arrow = 'left-bottom', disabledArrow, sx, ...other }) {
   return (
     <Popover
       anchorOrigin={{ vertical: 'bottom', horizontal: 'right' }}
-      transformOrigin={{ vertical: 'top', horizontal: 'right' }}
+      transformOrigin={{ vertical: 'bottom', horizontal: 'right' }}
       PaperProps={{
         sx: {
           p: 1,

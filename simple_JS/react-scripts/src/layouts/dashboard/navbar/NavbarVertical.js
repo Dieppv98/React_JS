@@ -27,6 +27,7 @@ import { PATH_AUTH } from '../../../routes/paths';
 // hooks
 import useAuth from '../../../hooks/useAuth';
 import useIsMountedRef from '../../../hooks/useIsMountedRef';
+import AccountPopover from '../header/AccountPopover';
 
 // ----------------------------------------------------------------------
 
@@ -69,7 +70,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
   const isMountedRef = useIsMountedRef();
 
-  // const { enqueueSnackbar } = useSnackbar();
+  const { enqueueSnackbar } = useSnackbar();
 
   const [open, setOpen] = useState(null);
 
@@ -87,7 +88,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
       }
     } catch (error) {
       console.error(error);
-      // enqueueSnackbar('Unable to logout!', { variant: 'error' });
+      enqueueSnackbar('Unable to logout!', { variant: 'error' });
     }
   };
 
@@ -121,7 +122,11 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
 
       <NavSectionVertical navConfig={navConfig} isCollapse={isCollapse} />
 
-      <Button
+      <Stack direction="row" alignItems="center" style={{ width: 'fit-content', padding: '6px 25px' }}>
+        <AccountPopover />
+      </Stack>
+
+      {/* <Button
         variant="text"
         style={{ width: 'fit-content', padding: '6px 25px' }}
         onClick={handleLogout}
@@ -129,7 +134,7 @@ export default function NavbarVertical({ isOpenSidebar, onCloseSidebar }) {
         sx={{ m: 1 }}
       >
         Đăng xuất
-      </Button>
+      </Button> */}
 
       <Box sx={{ flexGrow: 1 }} />
 
