@@ -19,12 +19,15 @@ import { FormProvider, RHFTextField, RHFUploadAvatar } from '../../../components
 
 // ----------------------------------------------------------------------
 
+const link = process.env.REACT_APP_API_HOST;
+
 UserNewForm.propTypes = {
   isEdit: PropTypes.bool,
   currentUser: PropTypes.object,
 };
 
 export default function UserNewForm({ isEdit, currentUser }) {
+  console.log('currentUser', currentUser);
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar();
@@ -68,6 +71,7 @@ export default function UserNewForm({ isEdit, currentUser }) {
   useEffect(() => {
     if (isEdit && currentUser) {
       reset(defaultValues);
+      setAvartar(currentUser?.address);
     }
     if (!isEdit) {
       reset(defaultValues);
@@ -77,13 +81,41 @@ export default function UserNewForm({ isEdit, currentUser }) {
 
   const onSubmit = async (data) => {
     try {
+      data.id = currentUser.id;
       data.address = avatar;
-      console.log('data', data);
+      data.userName = data.userName.trim();
+      data.fullName = data.fullName.trim();
+      data.password = data.password.trim();
+      data.tel = data.tel.trim();
 
-      await new Promise((resolve) => setTimeout(resolve, 500));
-      reset();
-      enqueueSnackbar('Cập nhật thành công!');
-      navigate(PATH_USER.user.list);
+      await fetch(`${link}/user/checkDuplicatedUserName?UserName=${data.userName}&id=${data.id}`)
+        .then((response) => response.json())
+        .then((rs) => {
+          if (rs === true) {
+            fetch(`${link}/user/update`, {
+              method: 'POST',
+              body: JSON.stringify(data),
+              headers: {
+                'Content-Type': 'application/json',
+              },
+            })
+              .then((response) => response.json())
+              .then((rs) => {
+                if (rs >= 1) {
+                  reset();
+                  enqueueSnackbar('Cập nhật thành công!');
+                  navigate(PATH_USER.user.list);
+                } else {
+                  enqueueSnackbar('Cập nhật thất bại!', { variant: 'error' });
+                }
+              })
+              .catch((error) => console.error('Error:', error));
+          }
+          if (rs === false) {
+            enqueueSnackbar(`Tên tài khoản đã tồn tại!`, { variant: 'warning' });
+          }
+        })
+        .catch((error) => console.error('Error:', error));
     } catch (error) {
       console.log('error: ', error);
     }

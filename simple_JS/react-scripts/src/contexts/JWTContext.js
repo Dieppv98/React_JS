@@ -5,6 +5,8 @@ import axios from '../utils/axios';
 import { isValidToken, setSession } from '../utils/jwt';
 
 // ----------------------------------------------------------------------
+const currentUser = 'currentUser';
+const link = process.env.REACT_APP_API_HOST;
 
 const initialState = {
   isAuthenticated: false,
@@ -52,7 +54,7 @@ const reducer = (state, action) => (handlers[action.type] ? handlers[action.type
 const AuthContext = createContext({
   ...initialState,
   method: 'jwt',
-  login: () => Promise.resolve(),
+  login: (username, password) => Promise.resolve(),
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
 });
@@ -109,13 +111,15 @@ function AuthProvider({ children }) {
   }, []);
 
   const login = async (username, password) => {
-    const response = await axios.post('/api/account/login', {
+    console.log('password1234', password);
+    const response = await axios.post(`${link}/account/login`, {
       username,
       password,
     });
     const { accessToken, user } = response.data;
 
     setSession(accessToken);
+    localStorage.setItem(currentUser, response.data);
     dispatch({
       type: 'LOGIN',
       payload: {
@@ -163,3 +167,11 @@ function AuthProvider({ children }) {
 }
 
 export { AuthContext, AuthProvider };
+
+export default function authHeader() {
+  const user = JSON.parse(localStorage.getItem(currentUser));
+  if (user && user.accessToken) {
+    return { Authorization: `Bearer ${user.accessToken}` };
+  }
+  return {};
+}
