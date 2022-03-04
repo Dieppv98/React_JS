@@ -54,7 +54,17 @@ const reducer = (state, action) => (handlers[action.type] ? handlers[action.type
 const AuthContext = createContext({
   ...initialState,
   method: 'jwt',
-  login: (username, password) => Promise.resolve(),
+  login: () => async (username, password) => {
+    console.log('username', username);
+    const response = axios.post(`${link}/account/login`, {
+      username,
+      password,
+    });
+    console.log('response', response);
+    console.log('response', response.data);
+    setSession(response);
+    localStorage.setItem(currentUser, response.data);
+  },
   logout: () => Promise.resolve(),
   register: () => Promise.resolve(),
 });
