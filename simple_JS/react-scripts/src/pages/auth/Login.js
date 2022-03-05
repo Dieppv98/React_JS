@@ -28,7 +28,7 @@ const ContentStyle = styled('div')(({ theme }) => ({
 
 export default function Login() {
   return (
-    <Page title="Login">
+    <Page title="Đăng nhập">
       <RootStyle>
         <Container maxWidth="sm">
           <ContentStyle>
