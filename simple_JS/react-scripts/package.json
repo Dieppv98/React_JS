@@ -45,6 +45,7 @@
     "amazon-cognito-identity-js": "^5.2.7",
     "axios": "^0.24.0",
     "change-case": "^4.1.2",
+    "crypto": "^1.0.1",
     "date-fns": "^2.24.0",
     "env-cmd": "^10.1.0",
     "firebase": "^9.6.8",
@@ -72,6 +73,7 @@
     "react-scripts": "^4.0.3",
     "simplebar": "^5.3.6",
     "simplebar-react": "^2.3.6",
+    "stream": "0.0.2",
     "stylis": "^4.0.13",
     "stylis-plugin-rtl": "^2.1.1",
     "yup": "^0.32.11"
