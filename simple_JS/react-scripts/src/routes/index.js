@@ -35,7 +35,7 @@ export default function Router() {
       children: [
         { element: <Navigate to="/dashboard/one" replace />, index: true },
         { path: '/dashboard', element: <Navigate to="/dashboard/one" replace />, index: true },
-        { path: '/dashboard/one', element: <PageOne /> },
+        { path: '/dashboard/one', element: <GeneralApp /> },
         { path: '/dashboard/two', element: <PageTwo /> },
         { path: '/dashboard/three', element: <PageThree /> },
         {
@@ -81,3 +81,4 @@ const ColorList = Loadable(lazy(() => import('../pages/color/ColorList')));
 const UserList = Loadable(lazy(() => import('../pages/user/UserList')));
 const ChangePassWord = Loadable(lazy(() => import('../sections/@dashboard/user/account/AccountChangePassword')));
 const UserCreate = Loadable(lazy(() => import('../pages/user/UserCreate')));
+const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));

@@ -31,19 +31,14 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 // ----------------------------------------------------------------------
 
-const CHART_DATA = [12244, 53345, 44313, 78343];
+const CHART_DATA = [12244, 78343];
 
 export default function AppCurrentDownload() {
   const theme = useTheme();
 
   const chartOptions = merge(BaseOptionChart(), {
-    colors: [
-      theme.palette.primary.lighter,
-      theme.palette.primary.light,
-      theme.palette.primary.main,
-      theme.palette.primary.dark,
-    ],
-    labels: ['Mac', 'Window', 'iOS', 'Android'],
+    colors: [theme.palette.primary.lighter, theme.palette.primary.main],
+    labels: ['Mac', 'Android'],
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
     tooltip: {
@@ -58,7 +53,7 @@ export default function AppCurrentDownload() {
     plotOptions: {
       pie: {
         donut: {
-          size: '90%',
+          size: '80%',
           labels: {
             value: {
               formatter: (val) => fNumber(val),
@@ -66,7 +61,7 @@ export default function AppCurrentDownload() {
             total: {
               formatter: (w) => {
                 const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                return fNumber(sum);
+                return `alo ${fNumber(sum)}`;
               },
             },
           },
@@ -77,9 +72,9 @@ export default function AppCurrentDownload() {
 
   return (
     <Card>
-      <CardHeader title="Current Download" />
+      <CardHeader title="Tổng quan tình hình kinh doanh" />
       <ChartWrapperStyle dir="ltr">
-        <ReactApexChart type="donut" series={CHART_DATA} options={chartOptions} height={280} />
+        <ReactApexChart type="donut" series={CHART_DATA} options={chartOptions} height={300} />
       </ChartWrapperStyle>
     </Card>
   );
