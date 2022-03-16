@@ -6,5 +6,6 @@ export { default as AppTopAuthors } from './AppTopAuthors';
 export { default as AppTopRelated } from './AppTopRelated';
 export { default as AppAreaInstalled } from './AppAreaInstalled';
 export { default as AppWidgetSummary } from './AppWidgetSummary';
-export { default as AppCurrentDownload } from './AppCurrentDownload';
+export { default as AppCurrentQuantyProduct } from './AppCurrentQuantyProduct';
 export { default as AppTopInstalledCountries } from './AppTopInstalledCountries';
+export { default as AppOverviewProfit } from './AppOverviewProfit';
