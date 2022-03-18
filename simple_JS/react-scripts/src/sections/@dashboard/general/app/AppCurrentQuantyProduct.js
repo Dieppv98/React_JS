@@ -54,6 +54,7 @@ export default function AppCurrentDownload() {
     ],
     stroke: { colors: [theme.palette.background.paper] },
     legend: { floating: true, horizontalAlign: 'center' },
+    dataLabels: { enabled: true },
     tooltip: {
       fillSeriesColor: false,
       y: {
@@ -86,7 +87,7 @@ export default function AppCurrentDownload() {
 
   return (
     <Card>
-      <CardHeader title="Tổng quan tình hình kho hàng" />
+      <CardHeader title="Tổng quan tình hình kho hàng" subheader="Hiện tại" />
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart
           type="donut"

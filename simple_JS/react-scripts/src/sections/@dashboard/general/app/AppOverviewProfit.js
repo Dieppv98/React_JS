@@ -1,11 +1,12 @@
 import merge from 'lodash/merge';
 import { useEffect, useState } from 'react';
-import { useTheme } from '@mui/material/styles';
+import { alpha, useTheme, styled } from '@mui/material/styles';
 import ReactApexChart from 'react-apexcharts';
 // @mui
 import { Card, CardHeader, Box, TextField } from '@mui/material';
 // components
 import { BaseOptionChart } from '../../../../components/chart';
+import Iconify from '../../../../components/Iconify';
 // ----------------------------------------------------------------------
 
 const link = process.env.REACT_APP_API_HOST;
@@ -28,6 +29,17 @@ const chart_select = [
     value: '4',
   },
 ];
+
+const IconWrapperStyle = styled('div')(({ theme }) => ({
+  width: 24,
+  height: 24,
+  display: 'flex',
+  borderRadius: '50%',
+  alignItems: 'center',
+  justifyContent: 'center',
+  color: theme.palette.success.main,
+  backgroundColor: alpha(theme.palette.success.main, 0.16),
+}));
 
 export default function BankingBalanceStatistics() {
   const theme = useTheme();
@@ -54,7 +66,6 @@ export default function BankingBalanceStatistics() {
   const handleChangeSeriesSelect = (event) => {
     console.log('event', event.target.value);
     setSeriesSelect(event.target.value);
-
     fetch(`${link}/ReportReceipt/loadChartProfitOverview?profitOverview=${event.target.value}`)
       .then((response) => response.json())
       .then((rs) => {
@@ -69,8 +80,13 @@ export default function BankingBalanceStatistics() {
   };
 
   const chartOptions = merge(BaseOptionChart(), {
-    colors: [theme.palette.error.main, theme.palette.success.main],
+    colors: [theme.palette.error.dark, theme.palette.success.main],
     dataLabels: { enabled: true },
+    legend: { floating: true, horizontalAlign: 'center' },
+    chart: {
+      type: 'bar',
+      toolbar: { show: true },
+    },
     stroke: {
       show: true,
       width: 2,
@@ -78,17 +94,13 @@ export default function BankingBalanceStatistics() {
     },
     xaxis: {
       categories: [`Chi phí: ${dataChart.costString} vnđ`, `Doanh thu: ${dataChart.revenueString} vnđ`],
-      color: 'red',
     },
     tooltip: {
-      fillSeriesColor: false,
       y: {
-        formatter: (val) => `${val}`,
+        formatter: (val) => `$${val}`,
         title: {
           formatter: (seriesName) => `${seriesName}`,
-          color: 'black',
         },
-        color: 'black',
       },
     },
     plotOptions: {
@@ -127,18 +139,25 @@ export default function BankingBalanceStatistics() {
           </TextField>
         }
       />
+      <IconWrapperStyle
+        style={{ margin: '5px 24px -20px' }}
+        sx={{
+          ...(dataChart.profit < 0 && {
+            color: 'error.main',
+            bgcolor: alpha(theme.palette.error.main, 0.16),
+          }),
+        }}
+      >
+        <Iconify
+          width={22}
+          height={22}
+          icon={dataChart.profit >= 0 ? 'eva:trending-up-fill' : 'eva:trending-down-fill'}
+        />
+      </IconWrapperStyle>
 
       <Box sx={{ mt: 3, mx: 3 }} dir="ltr">
         <ReactApexChart type="bar" series={seriesData} options={chartOptions} height={364} />
       </Box>
-
-      {/* {chart_select.map((item) => (
-        <Box key={item.value} sx={{ mt: 3, mx: 3 }} dir="ltr">
-          {item.value === seriesData && (
-            <ReactApexChart type="bar" series={item.data} options={chartOptions} height={364} />
-          )}
-        </Box>
-      ))} */}
     </Card>
   );
 }
