@@ -36,8 +36,6 @@ export default function Router() {
         { element: <Navigate to="/dashboard/one" replace />, index: true },
         { path: '/dashboard', element: <Navigate to="/dashboard/one" replace />, index: true },
         { path: '/dashboard/one', element: <GeneralApp /> },
-        { path: '/dashboard/two', element: <PageTwo /> },
-        { path: '/dashboard/three', element: <PageThree /> },
         {
           path: '',
           children: [
@@ -71,8 +69,6 @@ export default function Router() {
 const Login = Loadable(lazy(() => import('../pages/auth/Login')));
 // Dashboard
 const PageOne = Loadable(lazy(() => import('../pages/PageOne')));
-const PageTwo = Loadable(lazy(() => import('../pages/PageTwo')));
-const PageThree = Loadable(lazy(() => import('../pages/PageThree')));
 const NotFound = Loadable(lazy(() => import('../pages/Page404')));
 const ProductList = Loadable(lazy(() => import('../pages/product/ProductList')));
 const ProductCreate = Loadable(lazy(() => import('../pages/product/ProductCreate')));

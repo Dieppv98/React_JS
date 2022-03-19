@@ -34,7 +34,7 @@ const ChartWrapperStyle = styled('div')(({ theme }) => ({
 
 const link = process.env.REACT_APP_API_HOST;
 
-export default function AppCurrentDownload() {
+export default function AppCurrentQuantyProduct() {
   const theme = useTheme();
 
   const [infoChart, setInfoChart] = useState(0);
@@ -58,7 +58,7 @@ export default function AppCurrentDownload() {
     tooltip: {
       fillSeriesColor: false,
       y: {
-        formatter: (seriesName) => fNumber(seriesName),
+        formatter: () => `sản phẩm`,
         title: {
           formatter: (seriesName) => `${seriesName}`,
         },
@@ -75,7 +75,7 @@ export default function AppCurrentDownload() {
             total: {
               formatter: (w) => {
                 const sum = w.globals.seriesTotals.reduce((a, b) => a + b, 0);
-                return `${fNumber(sum)}`;
+                return `${fNumber(sum)} sp`;
               },
               label: 'Tổng nhập',
             },

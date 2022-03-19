@@ -5,8 +5,12 @@ import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 // sections
-import { AppCurrentQuantyProduct, AppOverviewProfit, AppSalesPerformance } from '../../sections/@dashboard/general/app';
-import { AnalyticsCurrentVisits } from '../../sections/@dashboard/general/analytics';
+import {
+  AppCurrentQuantyProduct,
+  AppOverviewProfit,
+  AppSalesPerformance,
+  AppProductPerformance,
+} from '../../sections/@dashboard/general/app';
 // ----------------------------------------------------------------------
 
 export default function GeneralApp() {
@@ -28,7 +32,7 @@ export default function GeneralApp() {
           </Grid>
 
           <Grid item xs={12} md={6} lg={5}>
-            <AnalyticsCurrentVisits />
+            <AppProductPerformance />
           </Grid>
         </Grid>
       </Container>

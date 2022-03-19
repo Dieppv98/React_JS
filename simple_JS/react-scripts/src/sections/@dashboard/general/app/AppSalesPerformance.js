@@ -43,7 +43,7 @@ const CHART_DATA = [
   },
 ];
 
-export default function AnalyticsWebsiteVisits() {
+export default function AppSalesPerformance() {
   const theme = useTheme();
   const [seriesSelect, setSeriesSelect] = useState(1);
   const [dataChart, setDataChart] = useState([]);

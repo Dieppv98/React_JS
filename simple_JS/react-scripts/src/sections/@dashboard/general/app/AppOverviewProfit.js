@@ -7,6 +7,8 @@ import { Card, CardHeader, Box, TextField } from '@mui/material';
 // components
 import { BaseOptionChart } from '../../../../components/chart';
 import Iconify from '../../../../components/Iconify';
+// utils
+import { fNumber } from '../../../../utils/formatNumber';
 // ----------------------------------------------------------------------
 
 const link = process.env.REACT_APP_API_HOST;
@@ -41,7 +43,7 @@ const IconWrapperStyle = styled('div')(({ theme }) => ({
   backgroundColor: alpha(theme.palette.success.main, 0.16),
 }));
 
-export default function BankingBalanceStatistics() {
+export default function AppOverviewProfit() {
   const theme = useTheme();
   const [seriesSelect, setSeriesSelect] = useState(1);
   const [dataChart, setDataChart] = useState([]);
@@ -60,7 +62,8 @@ export default function BankingBalanceStatistics() {
           { name: 'Doanh thu', data: [rs.revenue] },
         ];
         setSeriesData(data);
-      });
+      })
+      .catch((error) => console.error('Error:', error));
   }, []);
 
   const handleChangeSeriesSelect = (event) => {
@@ -81,7 +84,7 @@ export default function BankingBalanceStatistics() {
 
   const chartOptions = merge(BaseOptionChart(), {
     colors: [theme.palette.error.dark, theme.palette.success.main],
-    dataLabels: { enabled: true },
+
     legend: { floating: true, horizontalAlign: 'center' },
     chart: {
       type: 'bar',
@@ -95,6 +98,20 @@ export default function BankingBalanceStatistics() {
     xaxis: {
       categories: [`Chi phí: ${dataChart.costString} vnđ`, `Doanh thu: ${dataChart.revenueString} vnđ`],
     },
+    dataLabels: {
+      enabled: true,
+      formatter: (w) => `${fNumber(w)} vnđ`,
+    },
+    yaxis: [
+      {
+        axisTicks: { show: true },
+        title: { text: 'Số tiền (vnđ)' },
+        ticks: {
+          callback: (label) => `${label / 1000} k`,
+        },
+        formatter: (w) => `${fNumber(w)} vnđ`,
+      },
+    ],
     tooltip: {
       y: {
         formatter: (val) => `$${val}`,
