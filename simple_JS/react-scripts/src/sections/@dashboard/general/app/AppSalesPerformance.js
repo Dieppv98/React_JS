@@ -6,6 +6,8 @@ import { useTheme } from '@mui/material/styles';
 import { Card, CardHeader, Box, TextField } from '@mui/material';
 //
 import { BaseOptionChart } from '../../../../components/chart';
+// utils
+import { fNumber, fCurrencyVND } from '../../../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
@@ -30,93 +32,83 @@ const chart_select = [
   },
 ];
 
-const CHART_DATA = [
-  {
-    name: 'Doanh thu',
-    type: 'column',
-    data: [23, 15, 52, 45, 45, 62, 26],
-  },
-  {
-    name: 'Số sản phẩm',
-    type: 'area',
-    data: [44, 55, 41, 67, 11, 22, 27],
-  },
-];
-
 export default function AppSalesPerformance() {
   const theme = useTheme();
   const [seriesSelect, setSeriesSelect] = useState(1);
   const [dataChart, setDataChart] = useState([]);
-  const [seriesData, setSeriesData] = useState([
-    { name: 'Chi phí', type: 'column', data: [] },
-    { name: 'Doanh thu', type: 'area', data: [] },
-  ]);
+  const [dataStartDate, setDataStartDate] = useState([]);
+  const [dataEndDate, setDataEndDate] = useState([]);
+  const [dataRevenue, setDataRevenue] = useState([]);
 
-  const handleChangeSeriesSelect = (event) => {
-    console.log('event', event.target.value);
-    setSeriesSelect(event.target.value);
-    fetch(`${link}/ReportReceipt/loadChartProfitOverview?profitOverview=${event.target.value}`)
+  useEffect(() => {
+    fetch(`${link}/ReportReceipt/drawChartSalesPerformance?salesPerformance=${seriesSelect}`)
       .then((response) => response.json())
       .then((rs) => {
         setDataChart(rs);
-        const data = [
-          { name: 'Doanh thu', type: 'column', data: [rs.cost] },
-          { name: 'Số sản phẩm', type: 'area', data: [rs.revenue] },
-        ];
-        setSeriesData(data);
-        console.log('dataChart', dataChart);
+        setDataStartDate(rs.map((x) => x.startDate));
+        setDataEndDate(rs.map((x) => x.endDate));
+        setDataRevenue(rs.map((x) => x.numberRevenue));
+      })
+      .catch((error) => console.error('Error:', error));
+  }, []);
+
+  const handleChangeSeriesSelect = (event) => {
+    setSeriesSelect(event.target.value);
+    fetch(`${link}/ReportReceipt/drawChartSalesPerformance?salesPerformance=${event.target.value}`)
+      .then((response) => response.json())
+      .then((rs) => {
+        setDataChart(rs);
+        setDataStartDate(rs.map((x) => x.startDate));
+        setDataEndDate(rs.map((x) => x.endDate));
+        setDataRevenue(rs.map((x) => x.numberRevenue));
       });
   };
 
   const chartOptions = merge(BaseOptionChart(), {
-    dataLabels: { enabled: true },
     legend: { floating: true, horizontalAlign: 'center' },
+    stroke: { width: [0, 2, 3] },
+    plotOptions: { bar: { columnWidth: '33%' } },
+    fill: { type: ['solid', 'gradient', 'solid'] },
+    labels: dataChart.map((o) => o.ojectName),
+    xaxis: { type: 'string' },
+    dataLabels: { enabled: true, formatter: (value) => `${fNumber(value)}` },
     chart: {
       type: 'column',
       toolbar: { show: true },
+      events: {
+        click: (event, chartContext, config) => {
+          const dataPointIndex = config.dataPointIndex;
+          if (dataPointIndex > -1) {
+            console.log('dataStartDate', dataStartDate[dataPointIndex]);
+            console.log('dataEndDate', dataEndDate[dataPointIndex]);
+            console.log('dataRevenue', dataRevenue[dataPointIndex]);
+          }
+        },
+      },
     },
-    stroke: { width: [0, 2, 3] },
-    plotOptions: { bar: { columnWidth: '33%' } },
-    // title: {
-    //   text: 'XYZ - Stock Analysis (2009 - 2016)',
-    //   align: 'center',
-    //   offsetX: 0,
-    // },
-    fill: { type: ['solid', 'gradient', 'solid'] },
-    labels: ['01/01/2003', '02/01/2003', '03/01/2003', '04/01/2003', '04/01/2003', '04/01/2003', '04/01/2003'],
-    xaxis: { type: 'string' },
     yaxis: [
       {
-        axisTicks: {
-          show: true,
-        },
-        title: {
-          text: 'Số sản phẩm',
-          style: { fontSize: '14px', fontFamily: 'ui-rounded' },
-        },
-        tooltip: {
-          enabled: true,
-        },
+        seriesName: 'Số sản phẩm',
+        axisTicks: { show: true },
+        title: { text: 'Số sản phẩm', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
+        labels: { show: true, formatter: (value) => fCurrencyVND(value) },
       },
       {
         seriesName: 'Doanh thu',
         opposite: true,
-        axisTicks: {
-          show: true,
-        },
-        title: {
-          text: 'Doanh thu (vnđ)',
-          style: { fontSize: '14px', fontFamily: 'ui-rounded' },
-        },
+        axisTicks: { show: true },
+        title: { text: 'Doanh thu (vnđ)', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
+        labels: { show: true, formatter: (value) => fCurrencyVND(value) },
       },
     ],
     tooltip: {
       shared: true,
       intersect: false,
+      theme: theme.palette.background.primary,
       y: {
         formatter: (y) => {
           if (typeof y !== 'undefined') {
-            return `${y.toFixed(0)} visits`;
+            return `${fNumber(y)}`;
           }
           return y;
         },
@@ -152,7 +144,23 @@ export default function AppSalesPerformance() {
         }
       />
       <Box sx={{ p: 3, pb: 1 }} dir="ltr">
-        <ReactApexChart type="line" series={CHART_DATA} options={chartOptions} height={364} />
+        <ReactApexChart
+          type="line"
+          series={[
+            {
+              name: 'Doanh thu',
+              type: 'column',
+              data: dataChart.map((o) => o.numberRevenue),
+            },
+            {
+              name: 'Số sản phẩm',
+              type: 'area',
+              data: dataChart.map((o) => o.numberProduct),
+            },
+          ]}
+          options={chartOptions}
+          height={364}
+        />
       </Box>
     </Card>
   );

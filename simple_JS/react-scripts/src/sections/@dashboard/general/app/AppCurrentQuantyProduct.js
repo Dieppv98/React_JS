@@ -87,7 +87,7 @@ export default function AppCurrentQuantyProduct() {
 
   return (
     <Card>
-      <CardHeader title="Tổng quan tình hình kho hàng" subheader="Hiện tại" />
+      <CardHeader title="Tổng quan tình hình kho hàng" />
       <ChartWrapperStyle dir="ltr">
         <ReactApexChart
           type="donut"

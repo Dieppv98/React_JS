@@ -86,38 +86,26 @@ export default function AppOverviewProfit() {
     colors: [theme.palette.error.dark, theme.palette.success.main],
 
     legend: { floating: true, horizontalAlign: 'center' },
-    chart: {
-      type: 'bar',
-      toolbar: { show: true },
-    },
-    stroke: {
-      show: true,
-      width: 2,
-      colors: ['transparent'],
-    },
+    chart: { type: 'bar', toolbar: { show: true } },
+    stroke: { show: true, width: 2, colors: ['transparent'] },
     xaxis: {
       categories: [`Chi phí: ${dataChart.costString} vnđ`, `Doanh thu: ${dataChart.revenueString} vnđ`],
     },
-    dataLabels: {
-      enabled: true,
-      formatter: (w) => `${fNumber(w)} vnđ`,
-    },
+    dataLabels: { enabled: true, formatter: (w) => `${fNumber(w)} vnđ` },
     yaxis: [
       {
         axisTicks: { show: true },
         tickAmount: 4,
         title: { text: 'Số tiền (vnđ)', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
-        labels: {
-          show: true,
-          formatter: (value) => fCurrencyVND(value),
-        },
+        labels: { show: true, formatter: (value) => fCurrencyVND(value) },
       },
     ],
     tooltip: {
+      theme: theme.palette.background.primary,
       y: {
-        formatter: (val) => `$${val}`,
+        formatter: (val) => `${fNumber(val)} vnđ`,
         title: {
-          formatter: (seriesName) => `${seriesName}`,
+          formatter: (seriesName) => `${seriesName}:`,
         },
       },
     },
