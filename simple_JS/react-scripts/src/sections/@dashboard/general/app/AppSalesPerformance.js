@@ -2,12 +2,32 @@ import merge from 'lodash/merge';
 import ReactApexChart from 'react-apexcharts';
 import { useEffect, useState } from 'react';
 import { useTheme } from '@mui/material/styles';
+import { useForm } from 'react-hook-form';
 // @mui
-import { Card, CardHeader, Box, TextField } from '@mui/material';
+import {
+  Card,
+  CardHeader,
+  Box,
+  TextField,
+  Table,
+  TableBody,
+  TableCell,
+  TableContainer,
+  TableRow,
+  Button,
+  Dialog,
+  DialogTitle,
+  DialogContent,
+  DialogActions,
+  Stack,
+  Typography,
+} from '@mui/material';
 //
+import { FormProvider } from '../../../../components/hook-form';
 import { BaseOptionChart } from '../../../../components/chart';
 // utils
 import { fNumber, fCurrencyVND } from '../../../../utils/formatNumber';
+import { UserListHead } from '../../user/list';
 
 // ----------------------------------------------------------------------
 
@@ -32,6 +52,12 @@ const chart_select = [
   },
 ];
 
+const TABLE_HEAD_DETAIL = [
+  { id: 'name', label: 'Phân loại', alignRight: false },
+  { id: 'numberTotal', label: 'Số lượng', alignRight: false },
+  { id: 'totalPrice', label: 'Doanh thu', alignRight: false, color: '#00a08a' },
+];
+
 export default function AppSalesPerformance() {
   const theme = useTheme();
   const [seriesSelect, setSeriesSelect] = useState(1);
@@ -39,6 +65,11 @@ export default function AppSalesPerformance() {
   const [dataStartDate, setDataStartDate] = useState([]);
   const [dataEndDate, setDataEndDate] = useState([]);
   const [dataRevenue, setDataRevenue] = useState([]);
+  const [openDialog, setOpenDialog] = useState(false);
+  const [titleDialog, setTitleDialog] = useState('');
+  const [dataDialog, setDataDialog] = useState([]);
+
+  const methods = useForm({});
 
   useEffect(() => {
     fetch(`${link}/ReportReceipt/drawChartSalesPerformance?salesPerformance=${seriesSelect}`)
@@ -64,6 +95,15 @@ export default function AppSalesPerformance() {
       });
   };
 
+  const getDataDialog = async (startDate, endDate) => {
+    await fetch(`${link}/ReportReceipt/getDetailSalesPerformance?startDate=${startDate}&endDate=${endDate}`)
+      .then((response) => response.json())
+      .then((rs) => setDataDialog(rs))
+      .catch((error) => console.error('Error:', error));
+
+    setOpenDialog(true);
+  };
+
   const chartOptions = merge(BaseOptionChart(), {
     legend: { floating: true, horizontalAlign: 'center' },
     stroke: { width: [0, 2, 3] },
@@ -79,9 +119,11 @@ export default function AppSalesPerformance() {
         click: (event, chartContext, config) => {
           const dataPointIndex = config.dataPointIndex;
           if (dataPointIndex > -1) {
-            console.log('dataStartDate', dataStartDate[dataPointIndex]);
-            console.log('dataEndDate', dataEndDate[dataPointIndex]);
-            console.log('dataRevenue', dataRevenue[dataPointIndex]);
+            const str = `Từ ${dataStartDate[dataPointIndex]} - ${dataEndDate[dataPointIndex]} (doanh thu ${fNumber(
+              dataRevenue[dataPointIndex]
+            )} vnđ)`;
+            setTitleDialog(str);
+            getDataDialog(dataStartDate[dataPointIndex], dataEndDate[dataPointIndex]);
           }
         },
       },
@@ -162,6 +204,62 @@ export default function AppSalesPerformance() {
           height={364}
         />
       </Box>
+
+      <Dialog open={openDialog} fullWidth maxWidth="md" onClose={() => setOpenDialog(false)}>
+        <DialogTitle style={{ fontSize: '22px' }}>Chi tiết hiệu quả doanh số</DialogTitle>
+        <FormProvider methods={methods}>
+          <DialogContent style={{ maxHeight: '540px' }}>
+            <Typography variant="subtitle1" sx={{ mb: 2 }}>
+              {titleDialog}
+            </Typography>
+            <Stack spacing={1}>
+              <TableContainer>
+                <Table>
+                  <TableBody>
+                    {dataDialog.map((row, index) => {
+                      const { revenue, productName, numberProduct, lstInfo } = row;
+                      return (
+                        <TableRow hover key={index} tabIndex={-1} sx={{ borderBottom: 0.1 }}>
+                          <TableCell align="center" style={{ padding: '0' }}>
+                            {index + 1}
+                          </TableCell>
+                          <TableCell>
+                            <Stack>{productName}</Stack>
+                            <Stack>{`(Bán: ${numberProduct} sp - Doanh thu: ${revenue} vnđ)`}</Stack>
+                          </TableCell>
+                          <TableCell align="center" style={{ padding: '0' }}>
+                            <Table>
+                              <UserListHead headLabel={TABLE_HEAD_DETAIL} rowCount={lstInfo.length} />
+                              {lstInfo.map((r) => {
+                                const { name, numberTotal, totalPrice } = r;
+                                return (
+                                  // eslint-disable-next-line react/jsx-key
+                                  <TableBody>
+                                    <TableRow hover tabIndex={-1}>
+                                      <TableCell>{name}</TableCell>
+                                      <TableCell align="center">{numberTotal}</TableCell>
+                                      <TableCell align="center" style={{ color: 'rgb(60 221 0)' }}>{`${fNumber(
+                                        totalPrice
+                                      )} vnđ`}</TableCell>
+                                    </TableRow>
+                                  </TableBody>
+                                );
+                              })}
+                            </Table>
+                          </TableCell>
+                        </TableRow>
+                      );
+                    })}
+                  </TableBody>
+                </Table>
+              </TableContainer>
+            </Stack>
+          </DialogContent>
+          <DialogActions>
+            <Button onClick={() => setOpenDialog(false)}>Đóng</Button>
+          </DialogActions>
+        </FormProvider>
+      </Dialog>
     </Card>
   );
 }
