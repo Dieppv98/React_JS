@@ -21,3 +21,17 @@ export function fShortenNumber(number) {
 export function fData(number) {
   return numeral(number).format('0.0 b');
 }
+
+export function fCurrencyVND(number) {
+  let val = Math.abs(number);
+  if (val >= 1000 && val < 1000000) {
+    val = `${(val / 1000).toFixed(0)}K`;
+  }
+  if (val >= 1000000 && val < 1000000000) {
+    val = `${(val / 1000000).toFixed(0)}M`;
+  }
+  if (val >= 1000000000) {
+    val = `${(val / 1000000000).toFixed(0)}B`;
+  }
+  return val;
+}

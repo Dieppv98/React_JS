@@ -92,6 +92,7 @@ export default function AppSalesPerformance() {
         },
         title: {
           text: 'Số sản phẩm',
+          style: { fontSize: '14px', fontFamily: 'ui-rounded' },
         },
         tooltip: {
           enabled: true,
@@ -105,6 +106,7 @@ export default function AppSalesPerformance() {
         },
         title: {
           text: 'Doanh thu (vnđ)',
+          style: { fontSize: '14px', fontFamily: 'ui-rounded' },
         },
       },
     ],

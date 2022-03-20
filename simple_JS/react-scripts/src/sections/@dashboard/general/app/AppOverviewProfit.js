@@ -8,7 +8,7 @@ import { Card, CardHeader, Box, TextField } from '@mui/material';
 import { BaseOptionChart } from '../../../../components/chart';
 import Iconify from '../../../../components/Iconify';
 // utils
-import { fNumber } from '../../../../utils/formatNumber';
+import { fNumber, fCurrencyVND } from '../../../../utils/formatNumber';
 // ----------------------------------------------------------------------
 
 const link = process.env.REACT_APP_API_HOST;
@@ -105,11 +105,12 @@ export default function AppOverviewProfit() {
     yaxis: [
       {
         axisTicks: { show: true },
-        title: { text: 'Số tiền (vnđ)' },
-        ticks: {
-          callback: (label) => `${label / 1000} k`,
+        tickAmount: 4,
+        title: { text: 'Số tiền (vnđ)', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
+        labels: {
+          show: true,
+          formatter: (value) => fCurrencyVND(value),
         },
-        formatter: (w) => `${fNumber(w)} vnđ`,
       },
     ],
     tooltip: {
