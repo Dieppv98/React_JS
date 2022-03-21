@@ -130,16 +130,16 @@ export default function AppSalesPerformance() {
     },
     yaxis: [
       {
-        seriesName: 'Số sản phẩm',
+        // seriesName: 'Số sản phẩm',
         axisTicks: { show: true },
-        title: { text: 'Số sản phẩm', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
+        title: { text: 'Doanh thu (vnđ)', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
         labels: { show: true, formatter: (value) => fCurrencyVND(value) },
       },
       {
-        seriesName: 'Doanh thu',
+        // seriesName: 'Doanh thu',
         opposite: true,
         axisTicks: { show: true },
-        title: { text: 'Doanh thu (vnđ)', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
+        title: { text: 'Số sản phẩm', style: { fontSize: '14px', fontFamily: 'ui-rounded' } },
         labels: { show: true, formatter: (value) => fCurrencyVND(value) },
       },
     ],
