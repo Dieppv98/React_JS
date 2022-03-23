@@ -49,6 +49,8 @@ export default function Router() {
             { path: 'account/changePassword', element: <ChangePassWord /> },
             { path: '/user/new', element: <UserCreate /> },
             { path: 'user/edit/:userId', element: <UserCreate /> },
+            { path: 'receipt/list', element: <ReceiptList /> },
+            { path: 'receipt/new', element: <ReceiptList /> },
           ],
         },
       ],
@@ -78,3 +80,4 @@ const UserList = Loadable(lazy(() => import('../pages/user/UserList')));
 const ChangePassWord = Loadable(lazy(() => import('../sections/@dashboard/user/account/AccountChangePassword')));
 const UserCreate = Loadable(lazy(() => import('../pages/user/UserCreate')));
 const GeneralApp = Loadable(lazy(() => import('../pages/dashboard/GeneralApp')));
+const ReceiptList = Loadable(lazy(() => import('../pages/receipt/ReceiptList')));

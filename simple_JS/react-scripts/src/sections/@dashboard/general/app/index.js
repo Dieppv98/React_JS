@@ -1,13 +1,4 @@
-export { default as AppWidget } from './AppWidget';
-export { default as AppWelcome } from './AppWelcome';
-export { default as AppFeatured } from './AppFeatured';
-export { default as AppNewInvoice } from './AppNewInvoice';
-export { default as AppTopAuthors } from './AppTopAuthors';
-export { default as AppTopRelated } from './AppTopRelated';
-export { default as AppAreaInstalled } from './AppAreaInstalled';
-export { default as AppWidgetSummary } from './AppWidgetSummary';
 export { default as AppCurrentQuantyProduct } from './AppCurrentQuantyProduct';
-export { default as AppTopInstalledCountries } from './AppTopInstalledCountries';
 export { default as AppOverviewProfit } from './AppOverviewProfit';
 export { default as AppSalesPerformance } from './AppSalesPerformance';
 export { default as AppProductPerformance } from './AppProductPerformance';
