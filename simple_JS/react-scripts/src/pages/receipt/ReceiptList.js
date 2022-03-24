@@ -22,7 +22,7 @@ import {
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
-import { PATH_PRODUCT } from '../../routes/paths';
+import { PATH_PRODUCT, PATH_RECEIPT } from '../../routes/paths';
 // hooks
 import { FormProvider, RHFSelect, RHFTextField } from '../../components/hook-form';
 import useSettings from '../../hooks/useSettings';
@@ -77,7 +77,7 @@ export default function UserList() {
   };
 
   useEffect(() => {
-    fetch(`${link}/product/getall`, requestOptions)
+    fetch(`${link}/receipt/getall`, requestOptions)
       .then((response) => response.json())
       .then((data) => setUserList(data.data))
       .catch((err) => console.log(err));
@@ -134,7 +134,7 @@ export default function UserList() {
             <Button
               variant="contained"
               component={RouterLink}
-              to={PATH_PRODUCT.product.new}
+              to={PATH_RECEIPT.receipt.new}
               startIcon={<Iconify icon={'eva:plus-fill'} />}
             >
               Thêm mới
