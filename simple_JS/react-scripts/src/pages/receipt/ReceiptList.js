@@ -19,10 +19,10 @@ import {
   DialogActions,
   Stack,
   Typography,
+  MenuItem,
 } from '@mui/material';
 
-import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
-import { PATH_PRODUCT, PATH_RECEIPT } from '../../routes/paths';
+import { PATH_RECEIPT } from '../../routes/paths';
 // hooks
 import { FormProvider, RHFSelect, RHFTextField } from '../../components/hook-form';
 import useSettings from '../../hooks/useSettings';
@@ -35,21 +35,27 @@ import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
 import { UserListHead } from '../../sections/@dashboard/user/list';
 import ReceiptListToolbar from '../../sections/@dashboard/receipt/ReceiptListToolbar';
+import { fNumber } from '../../utils/formatNumber';
 
 // ----------------------------------------------------------------------
 
 const TABLE_HEAD = [
   { id: 'STT', label: 'STT', alignRight: false },
-  { id: 'ten_san_pham', label: 'Mã phiếu', alignRight: false },
-  { id: 'ma_san_pham', label: 'Tên phiếu', alignRight: false },
-  { id: 'total_quantity', label: 'Loại phiếu', alignRight: false, color: '#00a08a' },
-  { id: 'quantity_current', label: 'Ngày nhập', alignRight: false, color: '#28a745' },
-  { id: 'unit_name', label: 'Người nhập', alignRight: false },
-  { id: 'created_date', label: 'Số mặt hàng', alignRight: false },
-  { id: 'lstChiTiet', label: 'Số sản phẩm', alignRight: false },
-  { id: 'lstChiTiet', label: 'Chi phí (vnđ)', alignRight: false },
+  { id: 'code', label: 'Mã phiếu', alignRight: false },
+  { id: 'name', label: 'Tên phiếu', alignRight: false },
+  { id: 'typeReceipt', label: 'Loại phiếu', alignRight: false, color: '#00a08a' },
+  { id: 'receiptDate', label: 'Ngày nhập', alignRight: false, color: '#28a745' },
+  { id: 'numberItem', label: 'Số mặt hàng', alignRight: false },
+  { id: 'totalProduct', label: 'Số sp', alignRight: false },
+  { id: 'totalPrice', label: 'Chi phí (vnđ)', alignRight: false },
   { id: '' },
 ];
+
+const ICON = {
+  mr: 2,
+  width: 20,
+  height: 20,
+};
 
 // ----------------------------------------------------------------------
 
@@ -79,7 +85,10 @@ export default function UserList() {
   useEffect(() => {
     fetch(`${link}/receipt/getall`, requestOptions)
       .then((response) => response.json())
-      .then((data) => setUserList(data.data))
+      .then((data) => {
+        console.log('data', data);
+        setUserList(data.data);
+      })
       .catch((err) => console.log(err));
   }, []);
 
@@ -144,40 +153,36 @@ export default function UserList() {
         />
 
         <Card>
-          <ReceiptListToolbar filterName={filterName} />
+          <ReceiptListToolbar filterName={filterName} onFilterName={handleFilterByName} />
 
           <Scrollbar>
-            <TableContainer sx={{ minWidth: 800 }}>
+            <TableContainer sx={{ minWidth: 'auto' }}>
               <Table>
-                <UserListHead headLabel={TABLE_HEAD} rowCount={userList.length} numSelected={selected.length} />
+                <UserListHead headLabel={TABLE_HEAD} rowCount={userList.length} />
                 <TableBody>
                   {filteredUsers.slice(page * rowsPerPage, page * rowsPerPage + rowsPerPage).map((row, index) => {
-                    const {
-                      id,
-                      ten_san_pham,
-                      ma_san_pham,
-                      total_quantity,
-                      quantity_current,
-                      unit_name,
-                      created_date_str,
-                    } = row;
+                    const { id, code, name, typeReceipt, receiptDate, numberItem, totalProduct, totalPrice } = row;
 
                     return (
                       <TableRow hover key={id} tabIndex={-1} sx={{ borderBottom: 0.1 }}>
                         <TableCell align="center">{index + 1}</TableCell>
-                        <TableCell align="center">{ten_san_pham}</TableCell>
-                        <TableCell align="center">{ma_san_pham}</TableCell>
-                        <TableCell align="center" style={{ color: 'rgb(0 206 178)' }}>
-                          {total_quantity}
+                        <TableCell align="center">{code}</TableCell>
+                        <TableCell align="center">{name}</TableCell>
+                        <TableCell style={{ color: typeReceipt === 1 ? 'rgb(0 224 114)' : 'rgb(255 37 37)' }}>
+                          {typeReceipt === 1 ? 'Phiếu nhập hàng' : 'Phiếu phát sinh'}
                         </TableCell>
-                        <TableCell align="center" style={{ color: 'rgb(0 224 51)' }}>
-                          {quantity_current}
-                        </TableCell>
-                        <TableCell align="center">{unit_name}</TableCell>
-                        <TableCell align="center">{created_date_str}</TableCell>
+                        <TableCell align="center"> {receiptDate}</TableCell>
+                        <TableCell align="center">{numberItem}</TableCell>
+                        <TableCell align="center">{totalProduct}</TableCell>
+                        <TableCell align="center">{fNumber(totalPrice)}</TableCell>
 
                         <TableCell align="center">
-                          <ProductMoreMenu onPlus={() => handleOpenModal(id)} productId={id} />
+                          <Button type="Button" title="Xem chi tiết phiếu" onClick={() => handleOpenModal(id)}>
+                            <Iconify icon={'bi:eye-fill'} sx={{ ...ICON }} />
+                          </Button>
+
+                          {/*                         
+                          <ProductMoreMenu onPlus={() => handleOpenModal(id)} productId={id} /> */}
                         </TableCell>
                       </TableRow>
                     );

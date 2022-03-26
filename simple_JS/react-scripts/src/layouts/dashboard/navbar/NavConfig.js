@@ -59,8 +59,8 @@ const sidebarConfig = [
         path: '',
         icon: ICONS.billing,
         children: [
-          { title: 'Phiếu nhập hàng', path: '' },
-          { title: 'Phiếu doanh thu', path: '' },
+          { title: 'Phiếu nhập hàng', path: 'receipt/list' },
+          { title: 'Phiếu doanh thu', path: 'receipt/list' },
         ],
       },
       {

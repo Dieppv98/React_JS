@@ -20,19 +20,14 @@ import {
   DialogTitle,
   DialogContent,
   DialogActions,
-  Box,
   Stack,
   Typography,
-  Select,
-  MenuItem,
-  InputLabel,
-  FormControl,
 } from '@mui/material';
 
 import ProductMoreMenu from '../../sections/@dashboard/user/list/ProductMoreMenu';
 import { PATH_PRODUCT } from '../../routes/paths';
 // hooks
-import { FormProvider, RHFCheckbox, RHFSelect, RHFTextField, RHFRadioGroup } from '../../components/hook-form';
+import { FormProvider, RHFSelect, RHFTextField } from '../../components/hook-form';
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
@@ -71,7 +66,6 @@ const link = process.env.REACT_APP_API_HOST;
 console.log('link', link);
 
 export default function UserList() {
-  const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
   const { themeStretch } = useSettings();
   const [page, setPage] = useState(0);
