@@ -1,20 +1,30 @@
 import PropTypes from 'prop-types';
 import * as Yup from 'yup';
-import React, { useEffect, useMemo } from 'react';
+import React, { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm } from 'react-hook-form';
+import { useForm, Controller } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton } from '@mui/lab';
-import { Box, Card, Grid, Stack } from '@mui/material';
+import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
+import { Box, Card, Grid, Stack, TextField } from '@mui/material';
 // routes
 import { PATH_PRODUCT } from '../../../routes/paths';
 // components
 import { FormProvider, RHFTextField } from '../../../components/hook-form';
 
 // ----------------------------------------------------------------------
+const itemSelect = [
+  {
+    key: 'Phiếu nhập hàng',
+    value: '1',
+  },
+  {
+    key: 'Phiếu phát sinh',
+    value: '2',
+  },
+];
 
 ProductNewForm.propTypes = {
   isEdit: PropTypes.bool,
@@ -23,6 +33,8 @@ ProductNewForm.propTypes = {
 const link = process.env.REACT_APP_API_HOST;
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
+  const [seriesSelect, setSeriesSelect] = useState(1);
+
   const navigate = useNavigate();
 
   const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
@@ -49,6 +61,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   });
 
   const {
+    control,
     reset,
     handleSubmit,
     formState: { isSubmitting },
@@ -110,10 +123,14 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
       .catch((error) => console.error('Error:', error));
   };
 
+  const handleChangeSeriesSelect = (event) => {
+    setSeriesSelect(event.target.value);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
-        <Grid item xs={12} md={8}>
+        <Grid item xs={12} md={10}>
           <Card sx={{ p: 3 }}>
             <Box
               sx={{
@@ -123,18 +140,50 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 gridTemplateColumns: { xs: 'repeat(1, 1fr)', sm: 'repeat(1, 1fr)' },
               }}
             >
-              <RHFTextField name="ten_san_pham" label="Mã sản phẩm" />
-              <RHFTextField name="ma_san_pham" label="Tên sản phẩm" />
-              <RHFTextField name="unit_name" label="Đơn vị tính" />
+              <RHFTextField name="ma_san_pham" label="Tên phiếu" />
+
+              <Box
+                sx={{
+                  display: 'grid',
+                  columnGap: 2,
+                  rowGap: 3,
+                  gridTemplateColumns: { xs: 'repeat(2, 2fr)', sm: 'repeat(2, 2fr)' },
+                }}
+              >
+                <Grid item xs={12} md={12} lg={12}>
+                  <TextField
+                    select
+                    fullWidth
+                    value={seriesSelect}
+                    SelectProps={{ native: true }}
+                    name="ten_san_pham"
+                    label="Loại phiếu"
+                    onChange={handleChangeSeriesSelect}
+                  >
+                    {itemSelect.map((option) => (
+                      <option key={option.key} value={option.value}>
+                        {option.key}
+                      </option>
+                    ))}
+                  </TextField>
+                </Grid>
+
+                <Grid item xs={12} md={12} lg={12}>
+                  <MobileDateTimePicker
+                    label="Start date"
+                    inputFormat="dd/MM/yyyy hh:mm a"
+                    renderInput={(params) => <TextField {...params} fullWidth />}
+                  />
+
+                  <RHFTextField name="ten_san_pham" label="Ngày nhập" />
+                </Grid>
+              </Box>
             </Box>
 
             <Stack alignItems="flex-end" textAlign="right" display="block" sx={{ mt: 3 }}>
               <LoadingButton type="submit" variant="contained" loading={isSubmitting}>
                 {!isEdit ? 'Thêm mới' : 'Lưu thay đổi'}
               </LoadingButton>
-              {/* <Button variant="contained" href={PATH_PRODUCT.product.list} color={'error'}>
-                Quay lại
-              </Button> */}
             </Stack>
           </Card>
         </Grid>

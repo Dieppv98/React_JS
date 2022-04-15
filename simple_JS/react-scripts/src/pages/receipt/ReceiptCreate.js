@@ -4,14 +4,14 @@ import { useEffect, useState } from 'react';
 // @mui
 import { Container } from '@mui/material';
 // routes
-import { PATH_DASHBOARD, PATH_PRODUCT } from '../../routes/paths';
+import { PATH_DASHBOARD, PATH_RECEIPT } from '../../routes/paths';
 // hooks
 import useSettings from '../../hooks/useSettings';
 // components
 import Page from '../../components/Page';
 import HeaderBreadcrumbs from '../../components/HeaderBreadcrumbs';
 // sections
-import ProductNewForm from '../../sections/@dashboard/product/ProductNewForm';
+import ReceiptNewForm from '../../sections/@dashboard/receipt/ReceiptNewForm';
 
 // ----------------------------------------------------------------------
 const link = process.env.REACT_APP_API_HOST;
@@ -32,17 +32,17 @@ export default function UserCreate() {
   }, [productId]);
 
   return (
-    <Page title={!isEdit ? 'Thêm mới sản phẩm' : 'Chỉnh sửa sản phẩm'}>
+    <Page title={!isEdit ? 'Thêm mới phiếu nhập' : 'Chỉnh sửa phiếu nhập'}>
       <Container maxWidth={themeStretch ? false : 'lg'}>
         <HeaderBreadcrumbs
-          heading={!isEdit ? 'Thêm mới sản phẩm' : 'Chỉnh sửa sản phẩm'}
+          heading={!isEdit ? 'Thêm mới phiếu nhập' : 'Chỉnh sửa phiếu nhập'}
           links={[
             { name: 'Tổng quan', href: PATH_DASHBOARD.root },
-            { name: 'Sản phẩm', href: PATH_PRODUCT.product.list },
+            { name: 'phiếu nhập', href: PATH_RECEIPT.receipt.list },
             { name: !isEdit ? 'Thêm mới' : 'Chỉnh sửa' },
           ]}
         />
-        <ProductNewForm isEdit={isEdit} currentProduct={currentProduct} />
+        <ReceiptNewForm isEdit={isEdit} currentProduct={currentProduct} />
       </Container>
     </Page>
   );
