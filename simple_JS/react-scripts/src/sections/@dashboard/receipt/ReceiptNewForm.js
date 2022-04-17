@@ -4,11 +4,16 @@ import React, { useEffect, useMemo, useState } from 'react';
 import { useSnackbar } from 'notistack';
 import { useNavigate } from 'react-router-dom';
 // form
-import { useForm, Controller } from 'react-hook-form';
+import { useForm } from 'react-hook-form';
 import { yupResolver } from '@hookform/resolvers/yup';
 // @mui
-import { LoadingButton, MobileDateTimePicker } from '@mui/lab';
+import { LoadingButton } from '@mui/lab';
 import { Box, Card, Grid, Stack, TextField } from '@mui/material';
+import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
+import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
+import { DatePicker } from '@mui/x-date-pickers/DatePicker';
+import { useDispatch } from '../../../components/store';
+import Iconify from '../../../components/Iconify';
 // routes
 import { PATH_PRODUCT } from '../../../routes/paths';
 // components
@@ -34,10 +39,11 @@ const link = process.env.REACT_APP_API_HOST;
 
 export default function ProductNewForm({ isEdit, currentProduct }) {
   const [seriesSelect, setSeriesSelect] = useState(1);
-
+  const [value, setValue] = React.useState(new Date());
   const navigate = useNavigate();
-
-  const { enqueueSnackbar } = useSnackbar(); // hiển thị thông báo khi cập nhật thành công
+  const { enqueueSnackbar } = useSnackbar();
+  const [open, setOpen] = useState(false);
+  const dispatch = useDispatch();
 
   const NewProductSchema = Yup.object().shape({
     ten_san_pham: Yup.string().required('Tên sản phẩm không được bỏ trống'),
@@ -61,7 +67,6 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   });
 
   const {
-    control,
     reset,
     handleSubmit,
     formState: { isSubmitting },
@@ -127,6 +132,19 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
     setSeriesSelect(event.target.value);
   };
 
+  const handleOpenAdd = () => {
+    setOpen((prev) => !prev);
+  };
+
+  const handleAddTask = (task) => {
+    // dispatch(addTask({ card: task }));
+    handleCloseAddTask();
+  };
+
+  const handleCloseAddTask = () => {
+    setOpen(false);
+  };
+
   return (
     <FormProvider methods={methods} onSubmit={handleSubmit(onSubmit)}>
       <Grid container spacing={3}>
@@ -169,15 +187,31 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
                 </Grid>
 
                 <Grid item xs={12} md={12} lg={12}>
-                  <MobileDateTimePicker
-                    label="Start date"
-                    inputFormat="dd/MM/yyyy hh:mm a"
-                    renderInput={(params) => <TextField {...params} fullWidth />}
-                  />
-
-                  <RHFTextField name="ten_san_pham" label="Ngày nhập" />
+                  <LocalizationProvider dateAdapter={AdapterDateFns}>
+                    <DatePicker
+                      label="Ngày nhập"
+                      value={value}
+                      inputFormat="dd/MM/yyyy"
+                      onChange={(newValue) => {
+                        setValue(newValue);
+                      }}
+                      renderInput={(params) => <TextField {...params} fullWidth />}
+                    />
+                  </LocalizationProvider>
                 </Grid>
               </Box>
+
+              <Stack alignItems="flex-start" textAlign="left" display="block" sx={{ mt: 3 }}>
+                <LoadingButton
+                  variant="outlined"
+                  startIcon={<Iconify icon={'eva:plus-fill'} width={20} height={20} />}
+                  onClick={handleOpenAdd}
+                >
+                  Thêm chi tiết
+                </LoadingButton>
+
+                {/* {open && <KanbanAddTask onAddTask={handleAddTask} onCloseAddTask={handleCloseAddTask} />} */}
+              </Stack>
             </Box>
 
             <Stack alignItems="flex-end" textAlign="right" display="block" sx={{ mt: 3 }}>
