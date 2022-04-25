@@ -6,7 +6,7 @@ import { persistStore, persistReducer } from 'redux-persist';
 // ----------------------------------------------------------------------
 
 const store = configureStore({
-  // reducer: persistReducer(rootPersistConfig, rootReducer),
+  reducer: persistReducer(null, null),
   middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: false,

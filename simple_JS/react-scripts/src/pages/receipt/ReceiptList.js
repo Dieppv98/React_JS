@@ -19,7 +19,6 @@ import {
   DialogActions,
   Stack,
   Typography,
-  MenuItem,
 } from '@mui/material';
 
 import { PATH_RECEIPT } from '../../routes/paths';
@@ -63,17 +62,14 @@ const link = process.env.REACT_APP_API_HOST;
 console.log('link', link);
 
 export default function UserList() {
-  const navigate = useNavigate();
   const { themeStretch } = useSettings();
   const [page, setPage] = useState(0);
   const [order, setOrder] = useState('asc');
-  const [selected, setSelected] = useState([]);
   const [orderBy, setOrderBy] = useState('ten_san_pham');
   const [filterName, setFilterName] = useState('');
   const [rowsPerPage, setRowsPerPage] = useState(5);
   const [userList, setUserList] = useState([]);
   const [productName, setProductName] = useState('');
-  const [productIdModal, setProductIdModal] = useState(0);
   const [colorList, setColorList] = useState([]);
 
   const requestOptions = {
@@ -111,7 +107,6 @@ export default function UserList() {
   };
 
   const setInfoModal = async (data) => {
-    setProductIdModal(data.id);
     setProductName(data.ten_san_pham);
 
     await fetch(`${link}/color/get`, {
