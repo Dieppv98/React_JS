@@ -30,7 +30,7 @@ const sidebarConfig = [
   {
     subheader: 'Tổng quan',
     items: [
-      { title: 'Phân tích tổng quan', path: '/dashboard/one', icon: ICONS.analytics },
+      { title: 'Phân tích tổng quan', path: '/dashboard', icon: ICONS.analytics },
       // { title: 'Two', path: '/dashboard/two', icon: ICONS.ecommerce },
       // { title: 'Three', path: '/dashboard/three', icon: ICONS.analytics },
     ],

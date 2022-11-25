@@ -32,7 +32,7 @@ export default function NavbarAccount({ isCollapse }) {
           }),
         }}
       >
-        <Avatar src="https://minimal-assets-api.vercel.app/assets/images/avatars/avatar_5.jpg" alt="Rayan Moran" />
+        <Avatar src="/logo/Avater.png" alt="Soleil Boutique" />
 
         <Box
           sx={{
@@ -48,7 +48,7 @@ export default function NavbarAccount({ isCollapse }) {
           }}
         >
           <Typography variant="subtitle2" noWrap>
-            Rayan Moran
+            Soleil Boutique
           </Typography>
           <Typography variant="body2" noWrap sx={{ color: 'text.secondary' }}>
             user

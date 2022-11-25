@@ -85,7 +85,7 @@ export default function AccountPopover() {
           }),
         }}
       >
-        <Avatar src="https://minimal-assets-api.vercel.app/assets/images/avatars/avatar_5.jpg" alt="Rayan Moran" />
+        <Avatar src="/logo/Avater.png" alt="Soleil Boutique" />
       </IconButtonAnimate>
 
       <MenuPopover

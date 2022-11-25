@@ -12,7 +12,7 @@ import { Box, Card, Grid, Stack, TextField } from '@mui/material';
 import { AdapterDateFns } from '@mui/x-date-pickers/AdapterDateFns';
 import { LocalizationProvider } from '@mui/x-date-pickers/LocalizationProvider';
 import { DatePicker } from '@mui/x-date-pickers/DatePicker';
-import { useDispatch } from '../../../components/store';
+// import { useDispatch } from '../../../components/store';
 import Iconify from '../../../components/Iconify';
 // routes
 import { PATH_PRODUCT } from '../../../routes/paths';
@@ -43,7 +43,7 @@ export default function ProductNewForm({ isEdit, currentProduct }) {
   const navigate = useNavigate();
   const { enqueueSnackbar } = useSnackbar();
   const [open, setOpen] = useState(false);
-  const dispatch = useDispatch();
+  // const dispatch = useDispatch();
 
   const NewProductSchema = Yup.object().shape({
     ten_san_pham: Yup.string().required('Tên sản phẩm không được bỏ trống'),
